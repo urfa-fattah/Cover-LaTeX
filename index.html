@@ -16,21 +16,31 @@
   --ink:        #1a1a2e;
   --ink-muted:  #4a4a6a;
   --ink-light:  #8888aa;
-  --surface:    #f4f3f8;
-  --surface-2:  #eceaf4;
+  --surface:    #f2f1f8;
+  --surface-2:  #e8e6f4;
   --accent:     #5b3fd4;
   --accent-dim: #7b5fe4;
   --accent-bg:  #ede9ff;
+  --accent-soft:#f5f3ff;
   --border:     #d8d4ec;
+  --border-light:#e8e5f4;
   --danger:     #c0392b;
+  --danger-bg:  #fde8e8;
   --success:    #1a7a4a;
+  --success-bg: #e6f4ec;
+  --warning:    #d97706;
   --white:      #ffffff;
-  --a4-w: 210mm;
-  --a4-h: 297mm;
-  --sidebar-w: 420px;
+  --a4-w:       210mm;
+  --a4-h:       297mm;
+  --sidebar-w:  400px;
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Inter', sans-serif;
@@ -38,50 +48,58 @@ body {
   color: var(--ink);
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ── APP HEADER ── */
 .app-header {
   background: var(--white);
   border-bottom: 1.5px solid var(--border);
-  padding: 0 1.5rem;
-  height: 60px;
+  padding: 0 1.25rem;
+  height: 58px;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: .85rem;
   position: sticky;
   top: 0;
   z-index: 200;
-  box-shadow: 0 1px 8px rgba(91,63,212,.07);
+  box-shadow: 0 1px 12px rgba(91,63,212,.08);
 }
 .app-logo {
-  width: 32px; height: 32px;
-  background: var(--accent);
-  border-radius: 8px;
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+  border-radius: 9px;
   display: flex; align-items: center; justify-content: center;
   color: #fff; font-size: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(91,63,212,.25);
 }
-.app-title { font-weight: 700; font-size: 1rem; color: var(--ink); letter-spacing: -.3px; }
-.app-subtitle { font-size: .75rem; color: var(--ink-light); font-weight: 400; }
-.header-actions { margin-left: auto; display: flex; gap: .5rem; }
+.app-title { font-weight: 700; font-size: .95rem; color: var(--ink); letter-spacing: -.3px; line-height: 1.2; }
+.app-subtitle { font-size: .7rem; color: var(--ink-light); font-weight: 400; }
+.header-actions { margin-left: auto; display: flex; gap: .4rem; align-items: center; }
 
 /* ── LAYOUT ── */
 .main-layout {
   display: flex;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 58px);
 }
 
 .form-panel {
   width: var(--sidebar-w);
-  min-width: 340px;
+  min-width: 320px;
   max-width: var(--sidebar-w);
   background: var(--white);
   border-right: 1.5px solid var(--border);
   overflow-y: auto;
+  overflow-x: hidden;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
+.form-panel::-webkit-scrollbar { width: 4px; }
+.form-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
 .preview-panel {
   flex: 1;
@@ -90,206 +108,316 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem 1.5rem;
-  gap: 1.5rem;
+  padding: 1.5rem 1.25rem 2rem;
+  gap: 1.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
 
 /* ── FORM SECTIONS ── */
 .form-section {
-  padding: 1.25rem 1.25rem 0;
+  padding: 1.1rem 1.1rem 0;
 }
 .form-section:last-child { padding-bottom: 1.25rem; }
 
 .section-header {
-  display: flex; align-items: center; gap: .5rem;
-  font-size: .7rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1.2px;
+  display: flex; align-items: center; gap: .45rem;
+  font-size: .68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.3px;
   color: var(--ink-light);
-  margin-bottom: 1rem;
-  padding-bottom: .5rem;
-  border-bottom: 1px solid var(--surface-2);
+  margin-bottom: .85rem;
+  padding-bottom: .45rem;
+  border-bottom: 1.5px solid var(--surface-2);
 }
-.section-header i { font-size: .85rem; color: var(--accent); }
+.section-header i { font-size: .8rem; color: var(--accent); }
+.section-badge {
+  margin-left: auto;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: .6rem;
+  font-weight: 700;
+  padding: .1rem .4rem;
+  border-radius: 20px;
+  text-transform: none;
+  letter-spacing: 0;
+}
 
 .form-label-text {
-  font-size: .78rem; font-weight: 600; color: var(--ink);
+  font-size: .75rem; font-weight: 600; color: var(--ink-muted);
   display: flex; align-items: center; gap: .25rem;
-  margin-bottom: .3rem;
+  margin-bottom: .28rem;
 }
-.req { color: var(--danger); font-size: .7rem; }
+.req { color: var(--danger); font-size: .68rem; }
 
 .form-control, .form-select {
-  font-size: .82rem;
+  font-size: .81rem;
   border: 1.5px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--ink);
-  padding: .5rem .75rem;
+  padding: .48rem .7rem;
   transition: border-color .15s, box-shadow .15s, background .15s;
+  width: 100%;
 }
 .form-control:focus, .form-select:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(91,63,212,.12);
+  box-shadow: 0 0 0 3px rgba(91,63,212,.1);
   background: var(--white);
   outline: none;
 }
-.form-control.is-invalid { border-color: var(--danger); }
-.invalid-feedback { font-size: .72rem; color: var(--danger); margin-top: .2rem; }
+.form-control.is-invalid { border-color: var(--danger); background: #fff8f8; }
+.invalid-feedback { font-size: .7rem; color: var(--danger); margin-top: .18rem; display: none; }
+.form-control.is-invalid ~ .invalid-feedback { display: block; }
 
 .form-divider {
   height: 1px; background: var(--surface-2);
-  margin: .25rem 1.25rem 0;
+  margin: 0 1.1rem;
 }
 
 /* Template switcher */
 .template-tabs {
-  display: flex; gap: .4rem;
-  padding: 1rem 1.25rem .75rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .4rem;
+  padding: .85rem 1.1rem .65rem;
 }
 .template-tab {
-  flex: 1; min-width: 90px;
-  padding: .4rem .5rem;
+  padding: .48rem .4rem;
   border: 1.5px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--ink-muted);
-  font-size: .72rem; font-weight: 600;
+  font-size: .73rem; font-weight: 600;
   cursor: pointer;
   text-align: center;
   transition: all .15s;
+  line-height: 1.2;
 }
+.template-tab i { display: block; font-size: 1rem; margin-bottom: .2rem; color: var(--ink-light); }
 .template-tab.active {
   border-color: var(--accent);
   background: var(--accent-bg);
   color: var(--accent);
 }
+.template-tab.active i { color: var(--accent); }
+.template-tab:not(.active):hover { border-color: var(--accent-dim); background: var(--accent-soft); }
 
-/* Student list */
+/* Teacher card */
+.teacher-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: .8rem;
+  margin-bottom: .55rem;
+  position: relative;
+  transition: border-color .15s;
+}
+.teacher-card:focus-within { border-color: var(--accent); }
+.teacher-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .55rem;
+  font-size: .68rem; font-weight: 700; color: var(--ink-muted);
+  text-transform: uppercase; letter-spacing: .8px;
+}
+.teacher-card-num {
+  display: flex; align-items: center; gap: .35rem;
+}
+.teacher-card-num span {
+  background: var(--accent);
+  color: #fff;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  font-size: .6rem;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+}
+.btn-remove-teacher {
+  width: 22px; height: 22px;
+  border: none; border-radius: 5px;
+  background: var(--danger-bg); color: var(--danger);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: .7rem;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.btn-remove-teacher:hover { background: #f8c0c0; }
+.btn-remove-teacher:disabled { opacity: .3; cursor: not-allowed; }
+
+/* Student card */
 .student-card {
   background: var(--surface);
   border: 1.5px solid var(--border);
-  border-radius: 10px;
-  padding: .85rem;
-  margin-bottom: .65rem;
+  border-radius: var(--radius-md);
+  padding: .8rem;
+  margin-bottom: .55rem;
   position: relative;
+  transition: border-color .15s;
 }
+.student-card:focus-within { border-color: var(--accent); }
 .student-card-header {
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: .6rem;
-  font-size: .72rem; font-weight: 700; color: var(--ink-muted);
+  margin-bottom: .55rem;
+  font-size: .68rem; font-weight: 700; color: var(--ink-muted);
   text-transform: uppercase; letter-spacing: .8px;
 }
-.btn-remove-student {
-  width: 24px; height: 24px;
-  border: none; border-radius: 6px;
-  background: #fde8e8; color: var(--danger);
+.student-num {
+  display: flex; align-items: center; gap: .35rem;
+}
+.student-num span {
+  background: var(--accent);
+  color: #fff;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  font-size: .6rem;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: .75rem;
+  font-weight: 700;
+}
+.btn-remove-student {
+  width: 22px; height: 22px;
+  border: none; border-radius: 5px;
+  background: var(--danger-bg); color: var(--danger);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: .7rem;
   transition: background .15s;
+  flex-shrink: 0;
 }
 .btn-remove-student:hover { background: #f8c0c0; }
+.btn-remove-student:disabled { opacity: .3; cursor: not-allowed; }
 
-.btn-add-student {
+.btn-add-item {
   width: 100%;
   border: 1.5px dashed var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--accent);
-  font-size: .78rem; font-weight: 600;
+  font-size: .76rem; font-weight: 600;
   padding: .5rem;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: .4rem;
   transition: all .15s;
 }
-.btn-add-student:hover { border-color: var(--accent); background: var(--accent-bg); }
-.btn-add-student:disabled { opacity: .4; cursor: not-allowed; }
+.btn-add-item:hover { border-color: var(--accent); background: var(--accent-bg); }
+.btn-add-item:disabled { opacity: .38; cursor: not-allowed; }
+
+.count-label {
+  font-size: .68rem; color: var(--ink-light);
+  margin-top: .4rem; text-align: center;
+}
 
 /* Logo upload */
 .logo-upload-area {
   border: 1.5px dashed var(--border);
-  border-radius: 10px;
-  padding: 1rem;
+  border-radius: var(--radius-md);
+  padding: .9rem;
   text-align: center;
   cursor: pointer;
   transition: all .15s;
   background: var(--surface);
   position: relative;
 }
-.logo-upload-area:hover { border-color: var(--accent); background: var(--accent-bg); }
+.logo-upload-area:hover { border-color: var(--accent); background: var(--accent-soft); }
+.logo-upload-area.dragover { border-color: var(--accent); background: var(--accent-bg); }
 .logo-preview-thumb {
-  max-height: 64px; max-width: 100%;
-  object-fit: contain; margin-bottom: .4rem;
+  max-height: 60px; max-width: 100%;
+  object-fit: contain; margin-bottom: .35rem;
 }
-.logo-upload-label { font-size: .75rem; color: var(--ink-light); }
+.logo-upload-label { font-size: .72rem; color: var(--ink-light); }
 .logo-upload-label strong { color: var(--accent); }
 #logo-file-input { display: none; }
-.logo-error { font-size: .72rem; color: var(--danger); margin-top: .3rem; }
+.logo-error { font-size: .7rem; color: var(--danger); margin-top: .3rem; }
 .logo-clear-btn {
-  position: absolute; top: 6px; right: 6px;
+  position: absolute; top: 5px; right: 5px;
   width: 20px; height: 20px;
   border: none; border-radius: 50%;
-  background: #fde8e8; color: var(--danger);
-  font-size: .65rem; cursor: pointer;
+  background: var(--danger-bg); color: var(--danger);
+  font-size: .6rem; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
 }
+.logo-clear-btn:hover { background: #f8c0c0; }
 
 /* ── PREVIEW PANEL ── */
 .preview-toolbar {
-  display: flex; align-items: center; gap: .5rem;
+  display: flex; align-items: center; gap: .4rem;
   background: var(--white);
   border: 1.5px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   padding: .5rem .75rem;
   width: 100%;
-  max-width: calc(var(--a4-w) + 40px);
+  max-width: calc(var(--a4-w) + 60px);
   flex-wrap: wrap;
+  gap: .35rem;
 }
-.preview-toolbar-label { font-size: .72rem; color: var(--ink-light); font-weight: 600; margin-right: auto; }
+.preview-toolbar-left {
+  display: flex; align-items: center; gap: .5rem;
+  margin-right: auto;
+}
+.preview-toolbar-label { font-size: .72rem; color: var(--ink-light); font-weight: 600; }
+.preview-zoom-controls {
+  display: flex; align-items: center; gap: .25rem;
+}
+.zoom-btn {
+  width: 26px; height: 26px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--ink-muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .7rem;
+  transition: all .15s;
+}
+.zoom-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+.zoom-label {
+  font-size: .7rem; color: var(--ink-muted);
+  font-weight: 600; min-width: 38px; text-align: center;
+}
 
 .preview-scroll-wrap {
-  overflow-x: auto;
-  overflow-y: visible;
+  overflow: auto;
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  padding: .5rem;
 }
 
-/* A4 COVER PAGE — the real rendering */
+/* A4 scale wrapper */
+.a4-scale-wrap {
+  transform-origin: top center;
+  transition: transform .2s ease;
+}
+
+/* A4 COVER PAGE */
 .a4-page {
   width: var(--a4-w);
   height: var(--a4-h);
   background: #ffffff;
   position: relative;
   flex-shrink: 0;
-  box-shadow: 0 4px 32px rgba(0,0,0,.18);
+  box-shadow: 0 6px 40px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.08);
   font-family: 'Times New Roman', Times, serif;
   overflow: hidden;
 }
 
-/* Double border (replicating tikzpicture) */
+/* Double border */
 .a4-border-outer {
   position: absolute;
-  top: 0.55in; left: 0.55in;
-  right: 0.55in; bottom: 0.55in;
+  top: 0.55in; left: 0.55in; right: 0.55in; bottom: 0.55in;
   border: 1.1pt solid #000;
-  pointer-events: none;
-  z-index: 2;
+  pointer-events: none; z-index: 2;
 }
 .a4-border-inner {
   position: absolute;
-  top: 0.62in; left: 0.62in;
-  right: 0.62in; bottom: 0.62in;
+  top: 0.62in; left: 0.62in; right: 0.62in; bottom: 0.62in;
   border: 0.35pt solid #000;
-  pointer-events: none;
-  z-index: 2;
+  pointer-events: none; z-index: 2;
 }
 
 /* Content sits inside margins */
 .a4-content {
   position: absolute;
-  top: 0.85in; left: 0.85in;
-  right: 0.85in; bottom: 0.85in;
+  top: 0.85in; left: 0.85in; right: 0.85in; bottom: 0.85in;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -298,34 +426,12 @@ body {
 }
 
 /* Typography matching LaTeX */
-.cv-university {
-  font-size: 24px; /* 18pt */
-  font-weight: bold;
-  line-height: 29.3px; /* 22pt */
-  margin-bottom: 0;
-}
-.cv-faculty {
-  font-size: 17.33px; /* 13pt */
-  font-weight: normal;
-  line-height: 21.3px; /* 16pt */
-  margin-top: 0.06in;
-}
-.cv-department {
-  font-size: 18.67px; /* 14pt */
-  font-weight: bold;
-  line-height: 22.67px; /* 17pt */
-  margin-top: 0.04in;
-}
+.cv-university { font-size: 24px; font-weight: bold; line-height: 29.3px; margin-bottom: 0; }
+.cv-faculty { font-size: 17.33px; font-weight: normal; line-height: 21.3px; margin-top: 0.06in; }
+.cv-department { font-size: 18.67px; font-weight: bold; line-height: 22.67px; margin-top: 0.04in; }
 
-.cv-logo-wrap {
-  margin-top: 0.22in;
-  margin-bottom: 0;
-}
-.cv-logo {
-  width: 1.45in; height: 1.65in;
-  object-fit: contain;
-  display: block; margin: 0 auto;
-}
+.cv-logo-wrap { margin-top: 0.22in; margin-bottom: 0; }
+.cv-logo { width: 1.45in; height: 1.65in; object-fit: contain; display: block; margin: 0 auto; }
 .cv-logo-placeholder {
   width: 1.45in; height: 1.65in;
   border: 1px dashed #ccc;
@@ -334,228 +440,235 @@ body {
   font-family: Arial, sans-serif;
 }
 
-.cv-rule {
-  width: 78%;
-  height: 0.7pt;
-  background: #000;
-  margin-top: 0.28in;
-  margin-bottom: 0;
-  border: none;
-}
+.cv-rule { width: 78%; height: 0.7pt; background: #000; margin-top: 0.28in; margin-bottom: 0; border: none; }
 
-.cv-course {
-  font-size: 18.67px; /* 14pt */
-  font-weight: bold;
-  line-height: 22.67px;
-  margin-top: 0.15in;
-}
-.cv-doc-type {
-  font-size: 17.33px; /* 13pt */
-  font-weight: bold;
-  line-height: 21.3px;
-  margin-top: 0.10in;
-}
-.cv-doc-title {
-  font-size: 25.33px; /* 19pt */
-  font-weight: bold;
-  line-height: 30.67px; /* 23pt */
-  margin-top: 0.14in;
-}
-.cv-rule-bottom {
-  width: 78%;
-  height: 0.7pt;
-  background: #000;
-  margin-top: 0.15in;
-  border: none;
-}
+.cv-course { font-size: 18.67px; font-weight: bold; line-height: 22.67px; margin-top: 0.15in; }
+.cv-doc-type { font-size: 17.33px; font-weight: bold; line-height: 21.3px; margin-top: 0.10in; }
+.cv-doc-title { font-size: 25.33px; font-weight: bold; line-height: 30.67px; margin-top: 0.14in; }
+.cv-rule-bottom { width: 78%; height: 0.7pt; background: #000; margin-top: 0.15in; border: none; }
 
 /* Submitted By block */
-.cv-submitted-section {
-  margin-top: 0.35in;
-  width: 72%;
-}
-.cv-section-header {
-  font-size: 17.33px; /* 13pt */
-  font-weight: bold;
-  line-height: 21.3px;
-  margin-bottom: 0.12in;
-}
+.cv-submitted-section { margin-top: 0.35in; width: 72%; }
+.cv-section-header { font-size: 17.33px; font-weight: bold; line-height: 21.3px; margin-bottom: 0.12in; }
 .cv-info-table {
-  width: auto;
-  margin: 0 auto;
+  width: auto; margin: 0 auto;
   border-collapse: collapse;
-  font-size: 16.67px; /* 12.5pt */
-  line-height: 20px; /* 15pt */
+  font-size: 16.67px; line-height: 20px;
   text-align: left;
 }
 .cv-info-table tr { line-height: 1.28; }
 .cv-info-table td { padding: 1.5px 0; vertical-align: top; }
-.cv-info-table .td-label { font-weight: bold; white-space: nowrap; padding-right: 0; }
+.cv-info-table .td-label { font-weight: bold; white-space: nowrap; }
 .cv-info-table .td-sep { padding: 0 0.16in 0 0.08in; font-weight: bold; }
-.cv-info-table .td-val { }
-
-/* Experiment block (lab report) */
-.cv-exp-table {
-  width: auto; margin: 0 auto;
-  font-size: 15px;
-  text-align: left;
-  border-collapse: collapse;
-}
-.cv-exp-table td { padding: 2px 0; vertical-align: top; }
 
 /* Submitted To block */
 .cv-submitted-to {
   margin-top: auto;
-  padding-top: 0.2in;
-  padding-bottom: 0.15in;
+  padding-top: 0.15in;
+  padding-bottom: 0.1in;
   width: 72%;
 }
-.cv-teacher-name {
-  font-size: 17.33px; font-weight: bold;
-  line-height: 21.3px; margin-top: 0.12in;
-}
-.cv-teacher-detail {
-  font-size: 16.67px; line-height: 20px;
-  margin-top: 0.04in;
-}
+.cv-teacher-entry { margin-bottom: 0.1in; }
+.cv-teacher-entry:last-child { margin-bottom: 0; }
+.cv-teacher-name { font-size: 17.33px; font-weight: bold; line-height: 21.3px; margin-top: 0.08in; }
+.cv-teacher-detail { font-size: 16.67px; line-height: 20px; margin-top: 0.03in; }
+.cv-teacher-divider { width: 50%; height: 0.5pt; background: #ccc; margin: 0.08in auto; }
 
 /* Group/project student table */
 .cv-group-table {
   width: 90%; margin: 0 auto;
   border-collapse: collapse;
-  font-size: 13px;
-  text-align: left;
+  font-size: 13px; text-align: left;
 }
 .cv-group-table th {
   font-weight: bold; font-size: 12px;
   border-bottom: 1px solid #333;
-  padding: 2px 6px;
-  text-align: center;
+  padding: 2px 6px; text-align: center;
 }
-.cv-group-table td {
-  padding: 2px 6px; line-height: 1.3;
-  text-align: center;
-}
+.cv-group-table td { padding: 2px 6px; line-height: 1.3; text-align: center; }
 .cv-group-table.compact { font-size: 11px; }
-
-/* Lab extra fields */
-.cv-lab-field { font-size: 15.33px; line-height: 1.35; margin-top: 0.07in; }
-.cv-lab-field strong { font-weight: bold; }
 
 /* ── BUTTONS ── */
 .btn-accent {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
   color: #fff;
   border: none;
-  border-radius: 8px;
-  padding: .4rem .9rem;
-  font-size: .78rem; font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: .38rem .85rem;
+  font-size: .76rem; font-weight: 600;
   cursor: pointer;
-  display: flex; align-items: center; gap: .35rem;
-  transition: background .15s, transform .1s;
+  display: flex; align-items: center; gap: .3rem;
+  transition: opacity .15s, transform .1s, box-shadow .15s;
   white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(91,63,212,.2);
 }
-.btn-accent:hover { background: var(--accent-dim); }
+.btn-accent:hover { opacity: .9; box-shadow: 0 3px 12px rgba(91,63,212,.3); }
 .btn-accent:active { transform: scale(.97); }
 .btn-outline-accent {
   background: transparent;
   color: var(--accent);
   border: 1.5px solid var(--accent);
-  border-radius: 8px;
-  padding: .38rem .85rem;
-  font-size: .78rem; font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: .35rem .8rem;
+  font-size: .76rem; font-weight: 600;
   cursor: pointer;
-  display: flex; align-items: center; gap: .35rem;
+  display: flex; align-items: center; gap: .3rem;
   transition: all .15s;
   white-space: nowrap;
 }
 .btn-outline-accent:hover { background: var(--accent-bg); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-muted);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .35rem .8rem;
+  font-size: .76rem; font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; gap: .3rem;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.btn-ghost:hover { border-color: var(--ink-muted); background: var(--surface-2); }
 
 /* Toast */
 .toast-container {
-  position: fixed; bottom: 1.5rem; right: 1.5rem;
-  z-index: 9999; display: flex; flex-direction: column; gap: .5rem;
+  position: fixed; bottom: 1.25rem; right: 1.25rem;
+  z-index: 9999; display: flex; flex-direction: column; gap: .4rem;
+  pointer-events: none;
 }
 .toast-msg {
   background: var(--ink); color: #fff;
-  padding: .6rem 1rem; border-radius: 8px;
-  font-size: .78rem; display: flex; align-items: center; gap: .5rem;
+  padding: .55rem 1rem; border-radius: var(--radius-sm);
+  font-size: .76rem; display: flex; align-items: center; gap: .45rem;
   animation: slideUp .2s ease;
-  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,.22);
+  pointer-events: auto;
+  max-width: 280px;
 }
 .toast-msg.success { background: var(--success); }
 .toast-msg.error   { background: var(--danger); }
+.toast-msg.warning { background: var(--warning); }
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 /* Storage bar */
-.storage-bar-wrap { padding: 0 1.25rem .75rem; }
-.storage-bar-label { font-size: .68rem; color: var(--ink-light); margin-bottom: .25rem; display: flex; justify-content: space-between; }
-.storage-bar { height: 4px; background: var(--border); border-radius: 2px; }
+.storage-bar-wrap { padding: 0 1.1rem .65rem; }
+.storage-bar-label { font-size: .66rem; color: var(--ink-light); margin-bottom: .22rem; display: flex; justify-content: space-between; }
+.storage-bar { height: 3px; background: var(--border); border-radius: 2px; }
 .storage-bar-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width .3s; }
-.storage-bar-fill.warn { background: #e67e22; }
+.storage-bar-fill.warn { background: var(--warning); }
 .storage-bar-fill.danger { background: var(--danger); }
 
-/* ── MOBILE ── */
+/* Empty state */
+.empty-hint {
+  background: var(--accent-bg);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: .6rem .8rem;
+  font-size: .72rem;
+  color: var(--accent);
+  display: flex; gap: .4rem; align-items: flex-start;
+  margin-bottom: .65rem;
+}
+
+/* ── MOBILE BOTTOM NAV ── */
+.mobile-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--white);
+  border-top: 1.5px solid var(--border);
+  padding: .6rem 1rem;
+  z-index: 300;
+  gap: .5rem;
+  box-shadow: 0 -4px 20px rgba(0,0,0,.08);
+}
+.mobile-preview-btn {
+  flex: 1;
+  padding: .6rem;
+  font-size: .8rem;
+}
+
+/* ── RESPONSIVE ── */
 @media (max-width: 991px) {
   :root { --sidebar-w: 100%; }
-  .main-layout { flex-direction: column; height: auto; }
-  .form-panel { width: 100%; max-width: 100%; border-right: none; border-bottom: 1.5px solid var(--border); max-height: none; }
-  .preview-panel { padding: 1.5rem 1rem; }
+  .main-layout { flex-direction: column; height: auto; min-height: calc(100vh - 58px); }
+  .form-panel { width: 100%; max-width: 100%; border-right: none; border-bottom: 1.5px solid var(--border); overflow: visible; }
+  .preview-panel { padding: 1.25rem 1rem; }
 }
 
 @media (max-width: 639px) {
-  .main-layout { display: block; height: auto; }
-  .form-panel { width: 100%; max-width: 100%; }
+  .main-layout { display: block; height: auto; padding-bottom: 80px; }
+  .form-panel { width: 100%; max-width: 100%; overflow: visible; }
   .preview-panel { display: none; }
   .preview-panel.mobile-open { display: flex; }
-  .mobile-preview-btn {
-    position: fixed; bottom: 1.5rem; left: 50%;
-    transform: translateX(-50%);
-    z-index: 500;
-    box-shadow: 0 4px 20px rgba(91,63,212,.35);
-    padding: .65rem 1.5rem;
-    font-size: .85rem;
-  }
-  .mobile-preview-btn.active { background: #888; }
+  .mobile-nav { display: flex; }
+  .header-actions .btn-outline-accent .d-none { display: none; }
+}
+
+@media (max-width: 400px) {
+  .app-header { padding: 0 .75rem; gap: .6rem; }
+  .app-title { font-size: .85rem; }
+  .header-actions { gap: .25rem; }
+  .btn-accent, .btn-outline-accent, .btn-ghost { padding: .32rem .55rem; font-size: .72rem; }
 }
 
 /* ── PRINT / PDF EXPORT ── */
 @media print {
   body, html { margin: 0; padding: 0; background: #fff; }
   .app-header, .form-panel, .preview-toolbar,
-  .toast-container, .mobile-preview-btn { display: none !important; }
+  .toast-container, .mobile-nav { display: none !important; }
   .main-layout { display: block; height: auto; }
-  .preview-panel { padding: 0; background: #fff; }
-  .preview-scroll-wrap { overflow: visible; }
-  .a4-page {
-    width: 210mm; height: 297mm;
-    box-shadow: none;
-    page-break-after: always;
-  }
+  .preview-panel { padding: 0; background: #fff; display: flex !important; }
+  .preview-scroll-wrap { overflow: visible; justify-content: center; }
+  .a4-scale-wrap { transform: none !important; }
+  .a4-page { width: 210mm; height: 297mm; box-shadow: none; page-break-after: always; }
 }
+
+/* ── FORM FIELD GROUPS ── */
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+@media (max-width: 400px) { .field-row { grid-template-columns: 1fr; } }
+
+/* Info tip */
+.info-tip {
+  font-size: .67rem; color: var(--ink-light);
+  display: flex; align-items: center; gap: .25rem;
+  margin-top: .25rem;
+}
+.info-tip i { color: var(--accent); font-size: .7rem; }
+
+/* Collapsible section */
+.section-collapse-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--ink-light); font-size: .7rem;
+  margin-left: auto;
+  display: flex; align-items: center; gap: .2rem;
+  transition: color .15s;
+  padding: 0;
+}
+.section-collapse-btn:hover { color: var(--accent); }
 </style>
 </head>
 <body>
 
 <!-- ══════════ HEADER ══════════ -->
 <header class="app-header">
-  <div class="app-logo"><i class="bi bi-journal-text"></i></div>
+  <div class="app-logo"><i class="bi bi-journal-richtext"></i></div>
   <div>
     <div class="app-title">Cover Page Generator</div>
     <div class="app-subtitle">Academic Document Templates</div>
   </div>
   <div class="header-actions">
-    <button class="btn-outline-accent" id="btn-clear-data" title="Clear saved data">
-      <i class="bi bi-trash3"></i><span class="d-none d-md-inline">Clear Data</span>
+    <button class="btn-ghost" id="btn-clear-data" title="Clear all data">
+      <i class="bi bi-arrow-counterclockwise"></i><span class="d-none d-sm-inline">Reset</span>
     </button>
-    <button class="btn-outline-accent" id="btn-export-png" title="Export PNG">
+    <button class="btn-outline-accent" id="btn-export-png" title="Export as PNG">
       <i class="bi bi-image"></i><span class="d-none d-md-inline">PNG</span>
     </button>
-    <button class="btn-accent" id="btn-export-pdf" title="Export PDF">
-      <i class="bi bi-file-earmark-pdf"></i><span class="d-none d-md-inline">Export PDF</span>
+    <button class="btn-accent" id="btn-export-pdf" title="Export as PDF">
+      <i class="bi bi-file-earmark-pdf-fill"></i><span class="d-none d-sm-inline">PDF</span>
     </button>
   </div>
 </header>
@@ -567,20 +680,27 @@ body {
   <aside class="form-panel" id="form-panel">
 
     <!-- Template selector -->
-    <div style="padding: 1rem 1.25rem .25rem;">
-      <div class="section-header"><i class="bi bi-layout-text-window-reverse"></i> Template</div>
+    <div style="padding:.85rem 1.1rem .1rem;">
+      <div class="section-header"><i class="bi bi-layout-text-window-reverse"></i> Template Type</div>
     </div>
     <div class="template-tabs">
-      <button class="template-tab active" data-tpl="assignment">Assignment</button>
-      <button class="template-tab" data-tpl="labReport">Lab Report</button>
-      <button class="template-tab" data-tpl="project">Project</button>
+      <button class="template-tab active" data-tpl="assignment">
+        <i class="bi bi-pencil-square"></i>Assignment
+      </button>
+      <button class="template-tab" data-tpl="labReport">
+        <i class="bi bi-clipboard2-pulse"></i>Lab Report
+      </button>
+      <button class="template-tab" data-tpl="project">
+        <i class="bi bi-people"></i>Project
+      </button>
     </div>
     <div class="form-divider"></div>
 
     <!-- Storage bar -->
-    <div class="storage-bar-wrap" style="padding-top:.75rem;">
+    <div class="storage-bar-wrap" style="padding-top:.65rem;">
       <div class="storage-bar-label">
-        <span>Local Storage</span><span id="storage-text">— KB / 5 MB</span>
+        <span><i class="bi bi-database" style="font-size:.6rem;"></i> Auto-saved</span>
+        <span id="storage-text">0 KB / 5 MB</span>
       </div>
       <div class="storage-bar"><div class="storage-bar-fill" id="storage-bar-fill" style="width:0%"></div></div>
     </div>
@@ -588,34 +708,34 @@ body {
 
     <!-- ── INSTITUTION SECTION ── -->
     <div class="form-section">
-      <div class="section-header"><i class="bi bi-building"></i> Institution</div>
+      <div class="section-header"><i class="bi bi-building-fill"></i> Institution</div>
 
       <div class="mb-3">
         <label class="form-label-text" for="f-uni">University Name <span class="req">*</span></label>
         <input class="form-control" id="f-uni" type="text" placeholder="e.g. University of Dhaka" autocomplete="off"/>
-        <div class="invalid-feedback" id="err-uni">Required</div>
+        <div class="invalid-feedback" id="err-uni">This field is required.</div>
       </div>
       <div class="mb-3">
         <label class="form-label-text" for="f-fac">Faculty Name <span class="req">*</span></label>
         <input class="form-control" id="f-fac" type="text" placeholder="e.g. Faculty of Engineering and Technology"/>
-        <div class="invalid-feedback" id="err-fac">Required</div>
+        <div class="invalid-feedback" id="err-fac">This field is required.</div>
       </div>
       <div class="mb-3">
         <label class="form-label-text" for="f-dept">Department Name <span class="req">*</span></label>
-        <input class="form-control" id="f-dept" type="text" placeholder="e.g. Dept. of Electrical and Electronic Engineering"/>
-        <div class="invalid-feedback" id="err-dept">Required</div>
+        <input class="form-control" id="f-dept" type="text" placeholder="e.g. Dept. of CSE"/>
+        <div class="invalid-feedback" id="err-dept">This field is required.</div>
       </div>
 
       <!-- Logo upload -->
       <div class="mb-1">
-        <label class="form-label-text">University Logo <span style="font-size:.68rem;color:var(--ink-light);font-weight:400;">(PNG/JPG/SVG, max 500 KB)</span></label>
+        <label class="form-label-text">University Logo <span style="font-size:.65rem;color:var(--ink-light);font-weight:400;">(PNG/JPG/SVG · max 500 KB)</span></label>
         <div class="logo-upload-area" id="logo-upload-area" onclick="document.getElementById('logo-file-input').click()">
           <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/svg+xml"/>
           <div id="logo-preview-inner">
-            <i class="bi bi-image" style="font-size:1.8rem;color:var(--ink-light);"></i>
+            <i class="bi bi-cloud-upload" style="font-size:1.6rem;color:var(--ink-light);"></i>
             <div class="logo-upload-label mt-1"><strong>Click to upload</strong> or drag & drop</div>
           </div>
-          <button class="logo-clear-btn" id="logo-clear-btn" style="display:none;" onclick="event.stopPropagation();clearLogo()">
+          <button class="logo-clear-btn" id="logo-clear-btn" style="display:none;" onclick="event.stopPropagation();clearLogo()" title="Remove logo">
             <i class="bi bi-x"></i>
           </button>
         </div>
@@ -626,24 +746,24 @@ body {
 
     <!-- ── DOCUMENT SECTION ── -->
     <div class="form-section" id="doc-section">
-      <div class="section-header"><i class="bi bi-file-text"></i> Document Info</div>
+      <div class="section-header"><i class="bi bi-file-earmark-text-fill"></i> Document Info</div>
 
       <div class="mb-3">
-        <label class="form-label-text" for="f-course">Course Code & Name <span class="req">*</span></label>
-        <input class="form-control" id="f-course" type="text" placeholder="e.g. 0533-PHY-1203 Optics"/>
-        <div class="invalid-feedback" id="err-course">Required</div>
+        <label class="form-label-text" for="f-course">Course Code &amp; Name <span class="req">*</span></label>
+        <input class="form-control" id="f-course" type="text" placeholder="e.g. CSE-3201 Data Structures"/>
+        <div class="invalid-feedback" id="err-course">This field is required.</div>
       </div>
       <div class="mb-3">
         <label class="form-label-text" for="f-doctype">Document Type <span class="req">*</span></label>
         <input class="form-control" id="f-doctype" type="text" placeholder="e.g. Assignment, Lab Report…"/>
-        <div class="invalid-feedback" id="err-doctype">Required</div>
+        <div class="invalid-feedback" id="err-doctype">This field is required.</div>
       </div>
 
-      <!-- Assignment title -->
+      <!-- Assignment / Project title -->
       <div class="mb-3" id="field-doctitle">
         <label class="form-label-text" for="f-doctitle">Document Title <span class="req">*</span></label>
-        <input class="form-control" id="f-doctitle" type="text" placeholder="e.g. Mach–Zehnder Interferometer"/>
-        <div class="invalid-feedback" id="err-doctitle">Required</div>
+        <input class="form-control" id="f-doctitle" type="text" placeholder="e.g. Sorting Algorithm Analysis"/>
+        <div class="invalid-feedback" id="err-doctitle">This field is required.</div>
       </div>
 
       <!-- Lab Report extra fields -->
@@ -653,16 +773,18 @@ body {
           <input class="form-control" id="f-expname" type="text" placeholder="e.g. Newton's Rings"/>
         </div>
         <div class="mb-3">
-          <label class="form-label-text" for="f-expno">Experiment No. <span class="req">*</span></label>
+          <label class="form-label-text" for="f-expno">Experiment No.</label>
           <input class="form-control" id="f-expno" type="text" placeholder="e.g. 03"/>
         </div>
-        <div class="mb-3">
-          <label class="form-label-text" for="f-dateperf">Date of Performance <span class="req">*</span></label>
-          <input class="form-control" id="f-dateperf" type="date"/>
-        </div>
-        <div class="mb-3">
-          <label class="form-label-text" for="f-datesub">Date of Submission <span class="req">*</span></label>
-          <input class="form-control" id="f-datesub" type="date"/>
+        <div class="field-row mb-3">
+          <div>
+            <label class="form-label-text" for="f-dateperf">Date Performed</label>
+            <input class="form-control" id="f-dateperf" type="date"/>
+          </div>
+          <div>
+            <label class="form-label-text" for="f-datesub">Date Submitted</label>
+            <input class="form-control" id="f-datesub" type="date"/>
+          </div>
         </div>
       </div>
 
@@ -676,62 +798,60 @@ body {
 
     <!-- ── SUBMITTED BY ── -->
     <div class="form-section" id="student-section">
-      <div class="section-header"><i class="bi bi-person-badge"></i> Submitted By</div>
+      <div class="section-header"><i class="bi bi-person-badge-fill"></i> Submitted By</div>
 
       <!-- Single student (assignment / lab) -->
       <div id="single-student">
         <div class="mb-3">
-          <label class="form-label-text" for="f-name">Name <span class="req">*</span></label>
-          <input class="form-control" id="f-name" type="text" placeholder="e.g. Rifatuzzaman"/>
-          <div class="invalid-feedback" id="err-name">Required</div>
+          <label class="form-label-text" for="f-name">Full Name <span class="req">*</span></label>
+          <input class="form-control" id="f-name" type="text" placeholder="e.g. Rafiqul Islam"/>
+          <div class="invalid-feedback" id="err-name">This field is required.</div>
         </div>
-        <div class="mb-3">
-          <label class="form-label-text" for="f-regno">Registration No. <span class="req">*</span></label>
-          <input class="form-control" id="f-regno" type="text" placeholder="e.g. 2024613237"/>
-          <div class="invalid-feedback" id="err-regno">Required</div>
-        </div>
-        <div class="mb-3">
-          <label class="form-label-text" for="f-roll">Class Roll <span class="req">*</span></label>
-          <input class="form-control" id="f-roll" type="text" placeholder="e.g. AE-168-015"/>
-          <div class="invalid-feedback" id="err-roll">Required</div>
+        <div class="field-row mb-3">
+          <div>
+            <label class="form-label-text" for="f-regno">Registration No. <span class="req">*</span></label>
+            <input class="form-control" id="f-regno" type="text" placeholder="e.g. 2024613237"/>
+            <div class="invalid-feedback" id="err-regno">Required.</div>
+          </div>
+          <div>
+            <label class="form-label-text" for="f-roll">Class Roll <span class="req">*</span></label>
+            <input class="form-control" id="f-roll" type="text" placeholder="e.g. AE-015"/>
+            <div class="invalid-feedback" id="err-roll">Required.</div>
+          </div>
         </div>
         <div class="mb-1">
           <label class="form-label-text" for="f-date">Submission Date <span class="req">*</span></label>
           <input class="form-control" id="f-date" type="date"/>
-          <div class="invalid-feedback" id="err-date">Required</div>
+          <div class="invalid-feedback" id="err-date">This field is required.</div>
         </div>
       </div>
 
       <!-- Multi student (project) -->
       <div id="multi-student" style="display:none;">
         <div id="students-list"></div>
-        <button class="btn-add-student" id="btn-add-student" onclick="addStudent()">
-          <i class="bi bi-person-plus"></i> Add Student (max 10)
+        <button class="btn-add-item" id="btn-add-student" onclick="addStudent()">
+          <i class="bi bi-person-plus-fill"></i> Add Student
         </button>
-        <div style="font-size:.7rem;color:var(--ink-light);margin-top:.4rem;" id="student-count-label"></div>
+        <div class="count-label" id="student-count-label"></div>
       </div>
     </div>
     <div class="form-divider"></div>
 
-    <!-- ── SUBMITTED TO ── -->
+    <!-- ── SUBMITTED TO (MULTI-TEACHER) ── -->
     <div class="form-section">
-      <div class="section-header"><i class="bi bi-person-workspace"></i> Submitted To</div>
-      <div class="mb-3">
-        <label class="form-label-text" for="f-tname">Teacher Name <span class="req">*</span></label>
-        <input class="form-control" id="f-tname" type="text" placeholder="e.g. Imran Hossain Sabuj"/>
-        <div class="invalid-feedback" id="err-tname">Required</div>
+      <div class="section-header">
+        <i class="bi bi-person-workspace"></i> Submitted To
+        <span class="section-badge" id="teacher-count-badge">1 Teacher</span>
       </div>
-      <div class="mb-3">
-        <label class="form-label-text" for="f-tshort">Short Name / Initials</label>
-        <input class="form-control" id="f-tshort" type="text" placeholder="e.g. IHS"/>
-      </div>
-      <div class="mb-3">
-        <label class="form-label-text" for="f-tdesig">Designation</label>
-        <input class="form-control" id="f-tdesig" type="text" placeholder="e.g. Assistant Professor"/>
-      </div>
-      <div class="mb-3">
-        <label class="form-label-text" for="f-tdept">Teacher's Department</label>
-        <input class="form-control" id="f-tdept" type="text" placeholder="e.g. Dept. of EEE"/>
+
+      <div id="teachers-list"></div>
+      <button class="btn-add-item" id="btn-add-teacher" onclick="addTeacher()">
+        <i class="bi bi-person-plus-fill"></i> Add Another Teacher
+      </button>
+      <div class="count-label" id="teacher-count-label"></div>
+      <div class="info-tip mt-2">
+        <i class="bi bi-info-circle-fill"></i>
+        All teachers appear in the "Submitted To" section of the cover page.
       </div>
     </div>
 
@@ -741,28 +861,33 @@ body {
   <main class="preview-panel" id="preview-panel">
 
     <div class="preview-toolbar">
-      <span class="preview-toolbar-label"><i class="bi bi-eye me-1"></i>Live Preview — A4</span>
-      <button class="btn-outline-accent" onclick="window.print()">
-        <i class="bi bi-printer"></i> Print
+      <div class="preview-toolbar-left">
+        <i class="bi bi-eye-fill" style="color:var(--accent);font-size:.85rem;"></i>
+        <span class="preview-toolbar-label">Live Preview — A4</span>
+      </div>
+      <div class="preview-zoom-controls d-none d-md-flex">
+        <button class="zoom-btn" onclick="changeZoom(-10)" title="Zoom out"><i class="bi bi-dash"></i></button>
+        <span class="zoom-label" id="zoom-label">75%</span>
+        <button class="zoom-btn" onclick="changeZoom(10)" title="Zoom in"><i class="bi bi-plus"></i></button>
+        <button class="zoom-btn" onclick="fitZoom()" title="Fit to window" style="width:auto;padding:0 .4rem;font-size:.62rem;">FIT</button>
+      </div>
+      <button class="btn-ghost" onclick="window.print()">
+        <i class="bi bi-printer-fill"></i><span class="d-none d-lg-inline">Print</span>
       </button>
       <button class="btn-outline-accent" id="btn-export-png2">
-        <i class="bi bi-image"></i> PNG
+        <i class="bi bi-image"></i><span class="d-none d-lg-inline">PNG</span>
       </button>
       <button class="btn-accent" id="btn-export-pdf2">
-        <i class="bi bi-file-earmark-pdf"></i> PDF
+        <i class="bi bi-file-earmark-pdf-fill"></i><span class="d-none d-sm-inline">PDF</span>
       </button>
     </div>
 
-    <div class="preview-scroll-wrap">
-      <!-- A4 Page -->
-      <div class="a4-page" id="a4-page">
-        <!-- Double border -->
-        <div class="a4-border-outer"></div>
-        <div class="a4-border-inner"></div>
-
-        <!-- Content -->
-        <div class="a4-content" id="a4-content">
-          <!-- Rendered dynamically by JS -->
+    <div class="preview-scroll-wrap" id="preview-scroll-wrap">
+      <div class="a4-scale-wrap" id="a4-scale-wrap">
+        <div class="a4-page" id="a4-page">
+          <div class="a4-border-outer"></div>
+          <div class="a4-border-inner"></div>
+          <div class="a4-content" id="a4-content"></div>
         </div>
       </div>
     </div>
@@ -770,10 +895,18 @@ body {
   </main>
 </div>
 
-<!-- Mobile Preview Toggle -->
-<button class="btn-accent mobile-preview-btn d-sm-none" id="mobile-preview-btn">
-  <i class="bi bi-eye"></i> Preview
-</button>
+<!-- Mobile Bottom Nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <button class="btn-ghost mobile-preview-btn" id="mobile-preview-btn">
+    <i class="bi bi-eye-fill"></i> Preview
+  </button>
+  <button class="btn-outline-accent" id="btn-export-png-mob">
+    <i class="bi bi-image"></i> PNG
+  </button>
+  <button class="btn-accent" id="btn-export-pdf-mob">
+    <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+  </button>
+</div>
 
 <!-- Toast container -->
 <div class="toast-container" id="toast-container"></div>
@@ -785,78 +918,76 @@ body {
 
 <script>
 /* ══════════════════════════════════════════════
-   TEMPLATE CONFIG (inline — mirrors template.json)
-══════════════════════════════════════════════ */
-const TEMPLATE_CONFIG = {
-  assignment: {
-    name: "Assignment",
-    fields: { institution: ["universityName","facultyName","departmentName","logo"], document: ["courseCode","documentType","documentTitle"], submittedBy: ["name","regNo","classRoll","date"], submittedTo: ["teacherName","teacherShortName","teacherDesignation","teacherDepartment"] }
-  },
-  labReport: {
-    name: "Lab Report",
-    fields: { institution: ["universityName","facultyName","departmentName","logo"], document: ["courseCode","documentType","experimentName","experimentNo","dateOfPerformance","dateOfSubmission"], submittedBy: ["name","regNo","classRoll","date"], submittedTo: ["teacherName","teacherShortName","teacherDesignation","teacherDepartment"] }
-  },
-  project: {
-    name: "Project",
-    fields: { institution: ["universityName","facultyName","departmentName","logo"], document: ["courseCode","documentType","documentTitle","groupName"], submittedBy: ["students[]"], submittedTo: ["teacherName","teacherShortName","teacherDesignation","teacherDepartment"] }
-  }
-};
-
-/* ══════════════════════════════════════════════
    STATE
 ══════════════════════════════════════════════ */
-const STORAGE_KEY = 'acpg_state_v2';
+const STORAGE_KEY = 'acpg_state_v3';
 const MAX_STUDENTS = 10;
+const MAX_TEACHERS = 5;
 
 let state = {
   template: 'assignment',
   universityName: 'University of Dhaka',
   facultyName: 'Faculty of Engineering and Technology',
-  departmentName: 'Department of Electrical and Electronic Engineering',
+  departmentName: 'Department of Computer Science and Engineering',
   logoData: null,
-  courseCode: '0533-PHY-1203 Optics',
+  courseCode: 'CSE-3201 Data Structures & Algorithms',
   documentType: 'Assignment',
-  documentTitle: 'Mach\u2013Zehnder Interferometer',
+  documentTitle: 'Analysis of Sorting Algorithms',
   experimentName: '', experimentNo: '', dateOfPerformance: '', dateOfSubmission: '',
   groupName: '',
-  name: 'Rifatuzzaman', regNo: '2024613237', classRoll: 'AE-168-015', date: '2026-06-16',
-  teacherName: 'Imran Hossain Sabuj', teacherShortName: 'IHS',
-  teacherDesignation: '', teacherDepartment: 'Department of Electrical and Electronic Engineering',
-  students: [{ name:'', regNo:'', classRoll:'' }]
+  name: 'Rafiqul Islam', regNo: '2024613237', classRoll: 'AE-168-015', date: '2026-06-26',
+  teachers: [
+    { name: 'Imran Hossain Sabuj', shortName: 'IHS', designation: 'Assistant Professor', department: 'Dept. of CSE' }
+  ],
+  students: [{ name: '', regNo: '', classRoll: '' }]
 };
 
 let saveTimer = null;
 
+/* ── LOAD / SAVE ── */
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) { const s = JSON.parse(raw); Object.assign(state, s); }
-  } catch(e) {}
+    if (raw) {
+      const s = JSON.parse(raw);
+      Object.assign(state, s);
+      // Migrate old single-teacher format
+      if (!state.teachers) {
+        state.teachers = [{
+          name: s.teacherName || '',
+          shortName: s.teacherShortName || '',
+          designation: s.teacherDesignation || '',
+          department: s.teacherDepartment || ''
+        }];
+      }
+      if (!state.students || !state.students.length) {
+        state.students = [{ name: '', regNo: '', classRoll: '' }];
+      }
+    }
+  } catch(e) { console.warn('State load error:', e); }
 }
 
 function saveState() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     try {
-      const toSave = { ...state };
-      // Warn if logo is large
-      const raw = JSON.stringify(toSave);
-      const kb = (new Blob([raw]).size / 1024).toFixed(1);
-      if (kb > 4500) { showToast('Warning: Storage nearing limit. Consider removing the logo.', 'error'); }
+      const raw = JSON.stringify(state);
+      const kb = new Blob([raw]).size / 1024;
+      if (kb > 4500) showToast('Storage nearing limit. Try removing the logo.', 'warning');
       localStorage.setItem(STORAGE_KEY, raw);
       updateStorageBar();
     } catch(e) { showToast('Could not save — storage may be full.', 'error'); }
-  }, 500);
+  }, 400);
 }
 
 function updateStorageBar() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY) || '';
-    const kb = (new Blob([raw]).size / 1024);
-    const maxKb = 5000;
-    const pct = Math.min(100, (kb / maxKb) * 100);
-    document.getElementById('storage-bar-fill').style.width = pct + '%';
-    document.getElementById('storage-bar-fill').className = 'storage-bar-fill' + (pct > 80 ? ' danger' : pct > 50 ? ' warn' : '');
+    const kb = new Blob([raw]).size / 1024;
+    const pct = Math.min(100, (kb / 5000) * 100);
+    const fill = document.getElementById('storage-bar-fill');
+    fill.style.width = pct + '%';
+    fill.className = 'storage-bar-fill' + (pct > 80 ? ' danger' : pct > 50 ? ' warn' : '');
     document.getElementById('storage-text').textContent = `${kb.toFixed(1)} KB / 5 MB`;
   } catch(e) {}
 }
@@ -864,17 +995,17 @@ function updateStorageBar() {
 /* ══════════════════════════════════════════════
    FORM → STATE BINDINGS
 ══════════════════════════════════════════════ */
-function bindInput(id, key, transform) {
+function bindInput(id, key) {
   const el = document.getElementById(id);
   if (!el) return;
   el.addEventListener('input', () => {
-    state[key] = transform ? transform(el.value) : el.value;
+    state[key] = el.value;
     saveState(); renderPreview();
   });
 }
 
 function syncFormToState() {
-  const set = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; };
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
   set('f-uni', state.universityName);
   set('f-fac', state.facultyName);
   set('f-dept', state.departmentName);
@@ -890,12 +1021,9 @@ function syncFormToState() {
   set('f-regno', state.regNo);
   set('f-roll', state.classRoll);
   set('f-date', state.date);
-  set('f-tname', state.teacherName);
-  set('f-tshort', state.teacherShortName);
-  set('f-tdesig', state.teacherDesignation);
-  set('f-tdept', state.teacherDepartment);
   if (state.logoData) renderLogoPreview(state.logoData);
   renderStudentList();
+  renderTeacherList();
 }
 
 function initBindings() {
@@ -914,10 +1042,11 @@ function initBindings() {
   bindInput('f-regno', 'regNo');
   bindInput('f-roll', 'classRoll');
   bindInput('f-date', 'date');
-  bindInput('f-tname', 'teacherName');
-  bindInput('f-tshort', 'teacherShortName');
-  bindInput('f-tdesig', 'teacherDesignation');
-  bindInput('f-tdept', 'teacherDepartment');
+
+  // Remove error highlight on input
+  document.querySelectorAll('.form-control').forEach(el => {
+    el.addEventListener('input', () => el.classList.remove('is-invalid'));
+  });
 }
 
 /* ══════════════════════════════════════════════
@@ -934,14 +1063,98 @@ document.querySelectorAll('.template-tab').forEach(btn => {
 
 function switchTemplate() {
   const t = state.template;
-  // Doc section fields
   document.getElementById('field-doctitle').style.display  = (t === 'labReport') ? 'none' : '';
-  document.getElementById('field-lab-extras').style.display = (t === 'labReport') ? '' : 'none';
-  document.getElementById('field-groupname').style.display  = (t === 'project')   ? '' : 'none';
-  // Student section
-  document.getElementById('single-student').style.display  = (t === 'project')    ? 'none' : '';
-  document.getElementById('multi-student').style.display   = (t === 'project')    ? '' : 'none';
+  document.getElementById('field-lab-extras').style.display = (t === 'labReport') ? ''     : 'none';
+  document.getElementById('field-groupname').style.display  = (t === 'project')   ? ''     : 'none';
+  document.getElementById('single-student').style.display   = (t === 'project')   ? 'none' : '';
+  document.getElementById('multi-student').style.display    = (t === 'project')   ? ''     : 'none';
   renderStudentList();
+}
+
+/* ══════════════════════════════════════════════
+   TEACHER LIST
+══════════════════════════════════════════════ */
+function renderTeacherList() {
+  const list = document.getElementById('teachers-list');
+  if (!list) return;
+  if (!state.teachers || !state.teachers.length) {
+    state.teachers = [{ name: '', shortName: '', designation: '', department: '' }];
+  }
+  list.innerHTML = '';
+  state.teachers.forEach((t, i) => {
+    const card = document.createElement('div');
+    card.className = 'teacher-card';
+    card.innerHTML = `
+      <div class="teacher-card-header">
+        <div class="teacher-card-num">
+          <span>${i + 1}</span> Teacher ${i + 1}
+        </div>
+        <button class="btn-remove-teacher" onclick="removeTeacher(${i})"
+          ${state.teachers.length <= 1 ? 'disabled' : ''} title="Remove teacher">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      <div class="mb-2">
+        <label class="form-label-text" style="font-size:.71rem;">Full Name ${i === 0 ? '<span class="req">*</span>' : ''}</label>
+        <input class="form-control form-control-sm teacher-name-input" value="${esc(t.name)}"
+          oninput="updateTeacher(${i},'name',this.value)" placeholder="e.g. Dr. Imran Hossain"
+          id="t-name-${i}"/>
+        ${i === 0 ? `<div class="invalid-feedback" id="err-tname">At least one teacher name is required.</div>` : ''}
+      </div>
+      <div class="field-row mb-2">
+        <div>
+          <label class="form-label-text" style="font-size:.71rem;">Initials</label>
+          <input class="form-control form-control-sm" value="${esc(t.shortName)}"
+            oninput="updateTeacher(${i},'shortName',this.value)" placeholder="e.g. IHS"/>
+        </div>
+        <div>
+          <label class="form-label-text" style="font-size:.71rem;">Designation</label>
+          <input class="form-control form-control-sm" value="${esc(t.designation)}"
+            oninput="updateTeacher(${i},'designation',this.value)" placeholder="e.g. Asst. Prof."/>
+        </div>
+      </div>
+      <div>
+        <label class="form-label-text" style="font-size:.71rem;">Department</label>
+        <input class="form-control form-control-sm" value="${esc(t.department)}"
+          oninput="updateTeacher(${i},'department',this.value)" placeholder="e.g. Dept. of CSE"/>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  const addBtn = document.getElementById('btn-add-teacher');
+  if (addBtn) addBtn.disabled = state.teachers.length >= MAX_TEACHERS;
+  const badge = document.getElementById('teacher-count-badge');
+  if (badge) badge.textContent = `${state.teachers.length} Teacher${state.teachers.length > 1 ? 's' : ''}`;
+  const label = document.getElementById('teacher-count-label');
+  if (label) {
+    label.textContent = state.teachers.length >= MAX_TEACHERS
+      ? `Maximum ${MAX_TEACHERS} teachers reached`
+      : `${state.teachers.length} / ${MAX_TEACHERS} teachers`;
+  }
+}
+
+function addTeacher() {
+  if (state.teachers.length >= MAX_TEACHERS) return;
+  state.teachers.push({ name: '', shortName: '', designation: '', department: '' });
+  saveState(); renderTeacherList(); renderPreview();
+}
+
+function removeTeacher(i) {
+  if (state.teachers.length <= 1) return;
+  state.teachers.splice(i, 1);
+  saveState(); renderTeacherList(); renderPreview();
+}
+
+function updateTeacher(i, key, val) {
+  if (!state.teachers[i]) return;
+  state.teachers[i][key] = val;
+  // Remove error highlight on first teacher name
+  if (i === 0 && key === 'name') {
+    const el = document.getElementById('t-name-0');
+    if (el) el.classList.remove('is-invalid');
+  }
+  saveState(); renderPreview();
 }
 
 /* ══════════════════════════════════════════════
@@ -950,42 +1163,57 @@ function switchTemplate() {
 function renderStudentList() {
   const list = document.getElementById('students-list');
   if (!list) return;
-  if (!state.students || !state.students.length) state.students = [{ name:'', regNo:'', classRoll:'' }];
+  if (!state.students || !state.students.length) {
+    state.students = [{ name: '', regNo: '', classRoll: '' }];
+  }
   list.innerHTML = '';
   state.students.forEach((s, i) => {
     const card = document.createElement('div');
     card.className = 'student-card';
     card.innerHTML = `
       <div class="student-card-header">
-        Student ${i+1}
-        <button class="btn-remove-student" onclick="removeStudent(${i})" ${state.students.length <= 1 ? 'disabled' : ''} title="Remove">
+        <div class="student-num">
+          <span>${i + 1}</span> Student ${i + 1}
+        </div>
+        <button class="btn-remove-student" onclick="removeStudent(${i})"
+          ${state.students.length <= 1 ? 'disabled' : ''} title="Remove student">
           <i class="bi bi-x"></i>
         </button>
       </div>
       <div class="mb-2">
-        <label class="form-label-text" style="font-size:.72rem;">Name</label>
-        <input class="form-control form-control-sm" value="${esc(s.name)}" oninput="updateStudent(${i},'name',this.value)" placeholder="Student name"/>
+        <label class="form-label-text" style="font-size:.71rem;">Name</label>
+        <input class="form-control form-control-sm" value="${esc(s.name)}"
+          oninput="updateStudent(${i},'name',this.value)" placeholder="Student name"/>
       </div>
-      <div class="mb-2">
-        <label class="form-label-text" style="font-size:.72rem;">Reg. No.</label>
-        <input class="form-control form-control-sm" value="${esc(s.regNo)}" oninput="updateStudent(${i},'regNo',this.value)" placeholder="Registration No."/>
-      </div>
-      <div>
-        <label class="form-label-text" style="font-size:.72rem;">Class Roll</label>
-        <input class="form-control form-control-sm" value="${esc(s.classRoll)}" oninput="updateStudent(${i},'classRoll',this.value)" placeholder="Class Roll"/>
+      <div class="field-row">
+        <div>
+          <label class="form-label-text" style="font-size:.71rem;">Reg. No.</label>
+          <input class="form-control form-control-sm" value="${esc(s.regNo)}"
+            oninput="updateStudent(${i},'regNo',this.value)" placeholder="Registration No."/>
+        </div>
+        <div>
+          <label class="form-label-text" style="font-size:.71rem;">Class Roll</label>
+          <input class="form-control form-control-sm" value="${esc(s.classRoll)}"
+            oninput="updateStudent(${i},'classRoll',this.value)" placeholder="Class Roll"/>
+        </div>
       </div>
     `;
     list.appendChild(card);
   });
+
   const addBtn = document.getElementById('btn-add-student');
   if (addBtn) addBtn.disabled = state.students.length >= MAX_STUDENTS;
   const label = document.getElementById('student-count-label');
-  if (label) label.textContent = `${state.students.length} / ${MAX_STUDENTS} students`;
+  if (label) {
+    label.textContent = state.students.length >= MAX_STUDENTS
+      ? `Maximum ${MAX_STUDENTS} students reached`
+      : `${state.students.length} / ${MAX_STUDENTS} students`;
+  }
 }
 
 function addStudent() {
   if (state.students.length >= MAX_STUDENTS) return;
-  state.students.push({ name:'', regNo:'', classRoll:'' });
+  state.students.push({ name: '', regNo: '', classRoll: '' });
   saveState(); renderStudentList(); renderPreview();
 }
 
@@ -996,6 +1224,7 @@ function removeStudent(i) {
 }
 
 function updateStudent(i, key, val) {
+  if (!state.students[i]) return;
   state.students[i][key] = val;
   saveState(); renderPreview();
 }
@@ -1008,10 +1237,10 @@ document.getElementById('logo-file-input').addEventListener('change', function()
   if (!file) return;
   const err = document.getElementById('logo-error');
   if (!['image/png','image/jpeg','image/svg+xml'].includes(file.type)) {
-    err.textContent = 'Only PNG, JPG or SVG allowed.'; err.style.display = 'block'; return;
+    err.textContent = 'Only PNG, JPG or SVG files are allowed.'; err.style.display = 'block'; return;
   }
   if (file.size > 500 * 1024) {
-    err.textContent = 'File exceeds 500 KB limit.'; err.style.display = 'block'; return;
+    err.textContent = 'File exceeds the 500 KB size limit.'; err.style.display = 'block'; return;
   }
   err.style.display = 'none';
   const reader = new FileReader();
@@ -1033,7 +1262,7 @@ function clearLogo() {
   state.logoData = null;
   document.getElementById('logo-file-input').value = '';
   document.getElementById('logo-preview-inner').innerHTML = `
-    <i class="bi bi-image" style="font-size:1.8rem;color:var(--ink-light);"></i>
+    <i class="bi bi-cloud-upload" style="font-size:1.6rem;color:var(--ink-light);"></i>
     <div class="logo-upload-label mt-1"><strong>Click to upload</strong> or drag & drop</div>`;
   document.getElementById('logo-clear-btn').style.display = 'none';
   saveState(); renderPreview();
@@ -1041,12 +1270,16 @@ function clearLogo() {
 
 // Drag & drop logo
 const logoArea = document.getElementById('logo-upload-area');
-logoArea.addEventListener('dragover', e => { e.preventDefault(); logoArea.style.borderColor = 'var(--accent)'; });
-logoArea.addEventListener('dragleave', () => { logoArea.style.borderColor = ''; });
+logoArea.addEventListener('dragover', e => { e.preventDefault(); logoArea.classList.add('dragover'); });
+logoArea.addEventListener('dragleave', () => logoArea.classList.remove('dragover'));
 logoArea.addEventListener('drop', e => {
-  e.preventDefault(); logoArea.style.borderColor = '';
+  e.preventDefault(); logoArea.classList.remove('dragover');
   const file = e.dataTransfer.files[0];
-  if (file) { document.getElementById('logo-file-input').files = e.dataTransfer.files; document.getElementById('logo-file-input').dispatchEvent(new Event('change')); }
+  if (file) {
+    const dt = new DataTransfer(); dt.items.add(file);
+    document.getElementById('logo-file-input').files = dt.files;
+    document.getElementById('logo-file-input').dispatchEvent(new Event('change'));
+  }
 });
 
 /* ══════════════════════════════════════════════
@@ -1060,11 +1293,13 @@ function fmtDate(val) {
   if (!val) return '';
   try {
     const d = new Date(val + 'T00:00:00');
-    return d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   } catch(e) { return val; }
 }
 
-function ph(val, fallback) { return val || `<span style="color:#ccc;font-style:italic;">${fallback}</span>`; }
+function ph(val, fallback) {
+  return val ? esc(val) : `<span style="color:#ccc;font-style:italic;">${fallback}</span>`;
+}
 
 /* ══════════════════════════════════════════════
    PREVIEW RENDERER
@@ -1073,44 +1308,65 @@ function renderPreview() {
   const c = document.getElementById('a4-content');
   const t = state.template;
 
-  // Shared header HTML
   const logoHtml = state.logoData
     ? `<img src="${state.logoData}" class="cv-logo" alt="Logo"/>`
     : `<div class="cv-logo-placeholder">No Logo</div>`;
 
-  const teacherDisplay = [state.teacherName, state.teacherShortName ? `[${state.teacherShortName}]` : ''].filter(Boolean).join(' ');
-
   const headerHtml = `
-    <div class="cv-university">${ph(state.universityName,'University Name')}</div>
-    <div class="cv-faculty">${ph(state.facultyName,'Faculty Name')}</div>
-    <div class="cv-department">${ph(state.departmentName,'Department Name')}</div>
+    <div class="cv-university">${ph(state.universityName, 'University Name')}</div>
+    <div class="cv-faculty">${ph(state.facultyName, 'Faculty Name')}</div>
+    <div class="cv-department">${ph(state.departmentName, 'Department Name')}</div>
     <div class="cv-logo-wrap">${logoHtml}</div>
   `;
 
-  const submittedToHtml = `
-    <div class="cv-submitted-to">
-      <div class="cv-section-header">Submitted To</div>
-      <div class="cv-teacher-name">${ph(teacherDisplay,'Teacher Name')}</div>
-      ${state.teacherDesignation ? `<div class="cv-teacher-detail">${esc(state.teacherDesignation)}</div>` : ''}
-      ${state.teacherDepartment  ? `<div class="cv-teacher-detail">${esc(state.teacherDepartment)}</div>`  : ''}
-    </div>
-  `;
+  // Build submitted-to HTML for all teachers
+  const teachers = (state.teachers || []).filter(t => t.name.trim());
+  let submittedToHtml = '';
+  if (teachers.length > 0) {
+    const teacherEntries = teachers.map((t, i) => {
+      const displayName = [t.name, t.shortName ? `[${t.shortName}]` : ''].filter(Boolean).join(' ');
+      return `
+        ${i > 0 ? '<div class="cv-teacher-divider"></div>' : ''}
+        <div class="cv-teacher-entry">
+          <div class="cv-teacher-name">${esc(displayName)}</div>
+          ${t.designation ? `<div class="cv-teacher-detail">${esc(t.designation)}</div>` : ''}
+          ${t.department  ? `<div class="cv-teacher-detail">${esc(t.department)}</div>`  : ''}
+        </div>
+      `;
+    }).join('');
+
+    submittedToHtml = `
+      <div class="cv-submitted-to">
+        <div class="cv-section-header">Submitted To</div>
+        ${teacherEntries}
+      </div>
+    `;
+  } else {
+    submittedToHtml = `
+      <div class="cv-submitted-to">
+        <div class="cv-section-header">Submitted To</div>
+        <div class="cv-teacher-entry">
+          <div class="cv-teacher-name"><span style="color:#ccc;font-style:italic;">Teacher Name</span></div>
+        </div>
+      </div>
+    `;
+  }
 
   // ── ASSIGNMENT template ──
   if (t === 'assignment') {
     c.innerHTML = `
       ${headerHtml}
       <hr class="cv-rule"/>
-      <div class="cv-course">${ph(state.courseCode,'Course Code & Name')}</div>
-      <div class="cv-doc-type">${ph(state.documentType,'Document Type')}</div>
-      <div class="cv-doc-title">${ph(state.documentTitle,'Document Title')}</div>
+      <div class="cv-course">${ph(state.courseCode, 'Course Code & Name')}</div>
+      <div class="cv-doc-type">${ph(state.documentType, 'Document Type')}</div>
+      <div class="cv-doc-title">${ph(state.documentTitle, 'Document Title')}</div>
       <hr class="cv-rule-bottom"/>
       <div class="cv-submitted-section">
         <div class="cv-section-header">Submitted By</div>
         <table class="cv-info-table">
-          <tr><td class="td-label">Name</td><td class="td-sep">:</td><td class="td-val">${ph(state.name,'—')}</td></tr>
-          <tr><td class="td-label">Registration No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.regNo,'—')}</td></tr>
-          <tr><td class="td-label">Class Roll</td><td class="td-sep">:</td><td class="td-val">${ph(state.classRoll,'—')}</td></tr>
+          <tr><td class="td-label">Name</td><td class="td-sep">:</td><td class="td-val">${ph(state.name, '—')}</td></tr>
+          <tr><td class="td-label">Registration No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.regNo, '—')}</td></tr>
+          <tr><td class="td-label">Class Roll</td><td class="td-sep">:</td><td class="td-val">${ph(state.classRoll, '—')}</td></tr>
           <tr><td class="td-label">Date</td><td class="td-sep">:</td><td class="td-val">${state.date ? fmtDate(state.date) : '<span style="color:#ccc;font-style:italic;">—</span>'}</td></tr>
         </table>
       </div>
@@ -1123,17 +1379,17 @@ function renderPreview() {
     c.innerHTML = `
       ${headerHtml}
       <hr class="cv-rule"/>
-      <div class="cv-course">${ph(state.courseCode,'Course Code & Name')}</div>
-      <div class="cv-doc-type">${ph(state.documentType,'Lab Report')}</div>
-      <div class="cv-doc-title">${ph(state.experimentName,'Experiment Name')}</div>
+      <div class="cv-course">${ph(state.courseCode, 'Course Code & Name')}</div>
+      <div class="cv-doc-type">${ph(state.documentType, 'Lab Report')}</div>
+      <div class="cv-doc-title">${ph(state.experimentName, 'Experiment Name')}</div>
       <hr class="cv-rule-bottom"/>
       <div class="cv-submitted-section">
         <div class="cv-section-header">Submitted By</div>
         <table class="cv-info-table">
-          <tr><td class="td-label">Name</td><td class="td-sep">:</td><td class="td-val">${ph(state.name,'—')}</td></tr>
-          <tr><td class="td-label">Registration No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.regNo,'—')}</td></tr>
-          <tr><td class="td-label">Class Roll</td><td class="td-sep">:</td><td class="td-val">${ph(state.classRoll,'—')}</td></tr>
-          <tr><td class="td-label">Experiment No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.experimentNo,'—')}</td></tr>
+          <tr><td class="td-label">Name</td><td class="td-sep">:</td><td class="td-val">${ph(state.name, '—')}</td></tr>
+          <tr><td class="td-label">Registration No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.regNo, '—')}</td></tr>
+          <tr><td class="td-label">Class Roll</td><td class="td-sep">:</td><td class="td-val">${ph(state.classRoll, '—')}</td></tr>
+          <tr><td class="td-label">Experiment No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.experimentNo, '—')}</td></tr>
           <tr><td class="td-label">Date of Performance</td><td class="td-sep">:</td><td class="td-val">${state.dateOfPerformance ? fmtDate(state.dateOfPerformance) : '<span style="color:#ccc;font-style:italic;">—</span>'}</td></tr>
           <tr><td class="td-label">Date of Submission</td><td class="td-sep">:</td><td class="td-val">${state.dateOfSubmission ? fmtDate(state.dateOfSubmission) : '<span style="color:#ccc;font-style:italic;">—</span>'}</td></tr>
         </table>
@@ -1148,7 +1404,7 @@ function renderPreview() {
     const compact = students.length > 5;
     const tableRows = students.map((s, i) => `
       <tr>
-        <td>${i+1}</td>
+        <td>${i + 1}</td>
         <td>${esc(s.name) || '—'}</td>
         <td>${esc(s.regNo) || '—'}</td>
         <td>${esc(s.classRoll) || '—'}</td>
@@ -1158,18 +1414,16 @@ function renderPreview() {
     c.innerHTML = `
       ${headerHtml}
       <hr class="cv-rule"/>
-      <div class="cv-course">${ph(state.courseCode,'Course Code & Name')}</div>
-      <div class="cv-doc-type">${ph(state.documentType,'Project Report')}</div>
-      <div class="cv-doc-title">${ph(state.documentTitle,'Project Title')}</div>
+      <div class="cv-course">${ph(state.courseCode, 'Course Code & Name')}</div>
+      <div class="cv-doc-type">${ph(state.documentType, 'Project Report')}</div>
+      <div class="cv-doc-title">${ph(state.documentTitle, 'Project Title')}</div>
       ${state.groupName ? `<div class="cv-doc-type" style="margin-top:.06in;font-weight:normal;">${esc(state.groupName)}</div>` : ''}
       <hr class="cv-rule-bottom"/>
-      <div class="cv-submitted-section" style="width:85%;">
+      <div class="cv-submitted-section" style="width:88%;">
         <div class="cv-section-header">Submitted By</div>
         <table class="cv-group-table ${compact ? 'compact' : ''}">
           <thead>
-            <tr>
-              <th>#</th><th>Name</th><th>Reg. No.</th><th>Class Roll</th>
-            </tr>
+            <tr><th>#</th><th>Name</th><th>Reg. No.</th><th>Class Roll</th></tr>
           </thead>
           <tbody>${tableRows}</tbody>
         </table>
@@ -1184,20 +1438,25 @@ function renderPreview() {
 ══════════════════════════════════════════════ */
 function validate() {
   let ok = true;
+
   const required = {
-    'f-uni':'err-uni', 'f-fac':'err-fac', 'f-dept':'err-dept',
-    'f-course':'err-course', 'f-doctype':'err-doctype',
-    'f-tname':'err-tname'
+    'f-uni': 'err-uni',
+    'f-fac': 'err-fac',
+    'f-dept': 'err-dept',
+    'f-course': 'err-course',
+    'f-doctype': 'err-doctype'
   };
+
   if (state.template !== 'labReport') required['f-doctitle'] = 'err-doctitle';
   if (state.template !== 'project') {
-    required['f-name'] = 'err-name';
+    required['f-name']  = 'err-name';
     required['f-regno'] = 'err-regno';
-    required['f-roll'] = 'err-roll';
-    required['f-date'] = 'err-date';
+    required['f-roll']  = 'err-roll';
+    required['f-date']  = 'err-date';
   }
+
   Object.entries(required).forEach(([fieldId, errId]) => {
-    const el = document.getElementById(fieldId);
+    const el  = document.getElementById(fieldId);
     const err = document.getElementById(errId);
     if (!el) return;
     if (!el.value.trim()) {
@@ -1209,13 +1468,28 @@ function validate() {
       if (err) err.style.display = 'none';
     }
   });
+
+  // Validate at least one teacher name
+  const firstTeacherInput = document.getElementById('t-name-0');
+  const firstTeacherErr   = document.getElementById('err-tname');
+  const hasTeacher = state.teachers.some(t => t.name.trim());
+  if (!hasTeacher) {
+    if (firstTeacherInput) firstTeacherInput.classList.add('is-invalid');
+    if (firstTeacherErr)   firstTeacherErr.style.display = 'block';
+    ok = false;
+  } else {
+    if (firstTeacherInput) firstTeacherInput.classList.remove('is-invalid');
+    if (firstTeacherErr)   firstTeacherErr.style.display = 'none';
+  }
+
+  if (!ok) {
+    // Scroll to first error
+    const firstErr = document.querySelector('.is-invalid');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
   return ok;
 }
-
-// Remove error on input
-document.querySelectorAll('.form-control').forEach(el => {
-  el.addEventListener('input', () => { el.classList.remove('is-invalid'); });
-});
 
 /* ══════════════════════════════════════════════
    EXPORT
@@ -1223,69 +1497,129 @@ document.querySelectorAll('.form-control').forEach(el => {
 async function exportPDF() {
   if (!validate()) { showToast('Please fill in all required fields.', 'error'); return; }
   showToast('Generating PDF…');
+
   const el = document.getElementById('a4-page');
+  // Temporarily reset any scale transform for clean capture
+  const wrap = document.getElementById('a4-scale-wrap');
+  const prevTransform = wrap.style.transform;
+  wrap.style.transform = 'none';
+
   const opt = {
     margin: 0,
     filename: `cover-page-${Date.now()}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+    html2canvas: { scale: 3, useCORS: true, letterRendering: true, allowTaint: true },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
+
   try {
     await html2pdf().set(opt).from(el).save();
-    showToast('PDF exported!', 'success');
-  } catch(e) { showToast('PDF export failed. Try PNG instead.', 'error'); }
+    showToast('PDF exported successfully!', 'success');
+  } catch(e) {
+    console.error(e);
+    showToast('PDF export failed. Try PNG instead.', 'error');
+  } finally {
+    wrap.style.transform = prevTransform;
+  }
 }
 
 async function exportPNG() {
   if (!validate()) { showToast('Please fill in all required fields.', 'error'); return; }
   showToast('Generating PNG…');
+
   const el = document.getElementById('a4-page');
+  const wrap = document.getElementById('a4-scale-wrap');
+  const prevTransform = wrap.style.transform;
+  wrap.style.transform = 'none';
+
   try {
     const dataUrl = await htmlToImage.toPng(el, { pixelRatio: 3, cacheBust: true });
     const a = document.createElement('a');
     a.download = `cover-page-${Date.now()}.png`;
     a.href = dataUrl; a.click();
-    showToast('PNG exported!', 'success');
-  } catch(e) { showToast('PNG export failed.', 'error'); }
+    showToast('PNG exported successfully!', 'success');
+  } catch(e) {
+    console.error(e);
+    showToast('PNG export failed.', 'error');
+  } finally {
+    wrap.style.transform = prevTransform;
+  }
 }
 
+// Wire all export buttons
 document.getElementById('btn-export-pdf').addEventListener('click', exportPDF);
 document.getElementById('btn-export-pdf2').addEventListener('click', exportPDF);
 document.getElementById('btn-export-png').addEventListener('click', exportPNG);
 document.getElementById('btn-export-png2').addEventListener('click', exportPNG);
+document.getElementById('btn-export-pdf-mob').addEventListener('click', exportPDF);
+document.getElementById('btn-export-png-mob').addEventListener('click', exportPNG);
+
+/* ══════════════════════════════════════════════
+   ZOOM CONTROLS
+══════════════════════════════════════════════ */
+let currentZoom = 75;
+
+function applyZoom(pct) {
+  currentZoom = Math.min(150, Math.max(30, pct));
+  document.getElementById('a4-scale-wrap').style.transform = `scale(${currentZoom / 100})`;
+  document.getElementById('zoom-label').textContent = `${currentZoom}%`;
+
+  // Adjust scroll wrap min height to accommodate scaled A4
+  const mmToPx = 3.7795;
+  const a4PxH = 297 * mmToPx * (currentZoom / 100);
+  document.getElementById('preview-scroll-wrap').style.minHeight = (a4PxH + 40) + 'px';
+}
+
+function changeZoom(delta) { applyZoom(currentZoom + delta); }
+
+function fitZoom() {
+  const wrap = document.getElementById('preview-panel');
+  const availW = wrap.clientWidth - 60;
+  const a4PxW = 210 * 3.7795;
+  const pct = Math.floor((availW / a4PxW) * 100);
+  applyZoom(Math.min(pct, 100));
+}
 
 /* ══════════════════════════════════════════════
    CLEAR DATA
 ══════════════════════════════════════════════ */
 document.getElementById('btn-clear-data').addEventListener('click', () => {
-  if (!confirm('Clear all saved data and reset to defaults?')) return;
+  if (!confirm('Reset all fields to defaults? This cannot be undone.')) return;
   localStorage.removeItem(STORAGE_KEY);
   state = {
-    template: 'assignment', universityName: '', facultyName: '', departmentName: '',
-    logoData: null, courseCode: '', documentType: '', documentTitle: '',
+    template: 'assignment',
+    universityName: '', facultyName: '', departmentName: '',
+    logoData: null,
+    courseCode: '', documentType: '', documentTitle: '',
     experimentName: '', experimentNo: '', dateOfPerformance: '', dateOfSubmission: '',
-    groupName: '', name: '', regNo: '', classRoll: '', date: '',
-    teacherName: '', teacherShortName: '', teacherDesignation: '', teacherDepartment: '',
-    students: [{ name:'', regNo:'', classRoll:'' }]
+    groupName: '',
+    name: '', regNo: '', classRoll: '', date: '',
+    teachers: [{ name: '', shortName: '', designation: '', department: '' }],
+    students: [{ name: '', regNo: '', classRoll: '' }]
   };
   clearLogo();
   document.querySelectorAll('.template-tab').forEach(b => b.classList.remove('active'));
   document.querySelector('[data-tpl="assignment"]').classList.add('active');
   syncFormToState(); switchTemplate(); renderPreview(); updateStorageBar();
-  showToast('Data cleared.', 'success');
+  showToast('All data cleared.', 'success');
 });
 
 /* ══════════════════════════════════════════════
    TOAST
 ══════════════════════════════════════════════ */
-function showToast(msg, type='') {
+function showToast(msg, type = '') {
   const container = document.getElementById('toast-container');
   const t = document.createElement('div');
   t.className = `toast-msg ${type}`;
-  t.innerHTML = `<i class="bi bi-${type==='success'?'check-circle':type==='error'?'exclamation-triangle':'info-circle'}"></i> ${msg}`;
+  const icons = { success: 'check-circle-fill', error: 'exclamation-triangle-fill', warning: 'exclamation-circle-fill' };
+  t.innerHTML = `<i class="bi bi-${icons[type] || 'info-circle-fill'}"></i> ${msg}`;
   container.appendChild(t);
-  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300); }, 3000);
+  setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateY(8px)';
+    t.style.transition = 'opacity .3s, transform .3s';
+    setTimeout(() => t.remove(), 300);
+  }, 3000);
 }
 
 /* ══════════════════════════════════════════════
@@ -1296,10 +1630,13 @@ const previewPanel = document.getElementById('preview-panel');
 mobileBtn.addEventListener('click', () => {
   const open = previewPanel.classList.toggle('mobile-open');
   mobileBtn.innerHTML = open
-    ? '<i class="bi bi-x"></i> Close'
-    : '<i class="bi bi-eye"></i> Preview';
+    ? '<i class="bi bi-x-lg"></i> Close'
+    : '<i class="bi bi-eye-fill"></i> Preview';
   mobileBtn.classList.toggle('active', open);
-  if (open) previewPanel.scrollIntoView({ behavior: 'smooth' });
+  if (open) {
+    previewPanel.scrollIntoView({ behavior: 'smooth' });
+    fitZoom();
+  }
 });
 
 /* ══════════════════════════════════════════════
@@ -1315,6 +1652,24 @@ updateStorageBar();
 // Sync template tab UI on load
 document.querySelectorAll('.template-tab').forEach(b => {
   b.classList.toggle('active', b.dataset.tpl === state.template);
+});
+
+// Initial zoom: fit to panel width on desktop
+window.addEventListener('load', () => {
+  if (window.innerWidth > 639) {
+    fitZoom();
+  } else {
+    applyZoom(50);
+  }
+});
+
+// Re-fit on resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (window.innerWidth > 639) fitZoom();
+  }, 200);
 });
 </script>
 </body>
