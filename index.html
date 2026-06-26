@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Academic Cover Page Generator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet"/>
+
+<style>
+/* ── DESIGN TOKENS ── */
+:root {
+  --ink:        #1a1a2e;
+  --ink-muted:  #4a4a6a;
+  --ink-light:  #8888aa;
+  --surface:    #f4f3f8;
+  --surface-2:  #eceaf4;
+  --accent:     #5b3fd4;
+  --accent-dim: #7b5fe4;
+  --accent-bg:  #ede9ff;
+  --border:     #d8d4ec;
+  --danger:     #c0392b;
+  --success:    #1a7a4a;
+  --white:      #ffffff;
+  --a4-w: 210mm;
+  --a4-h: 297mm;
+  --sidebar-w: 420px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── APP HEADER ── */
+.app-header {
+  background: var(--white);
+  border-bottom: 1.5px solid var(--border);
+  padding: 0 1.5rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 1px 8px rgba(91,63,212,.07);
+}
+.app-logo {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 1rem;
+}
+.app-title { font-weight: 700; font-size: 1rem; color: var(--ink); letter-spacing: -.3px; }
+.app-subtitle { font-size: .75rem; color: var(--ink-light); font-weight: 400; }
+.header-actions { margin-left: auto; display: flex; gap: .5rem; }
+
+/* ── LAYOUT ── */
+.main-layout {
+  display: flex;
+  height: calc(100vh - 60px);
+}
+
+.form-panel {
+  width: var(--sidebar-w);
+  min-width: 340px;
+  max-width: var(--sidebar-w);
+  background: var(--white);
+  border-right: 1.5px solid var(--border);
+  overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-panel {
+  flex: 1;
+  overflow: auto;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1.5rem;
+  gap: 1.5rem;
+}
+
+/* ── FORM SECTIONS ── */
+.form-section {
+  padding: 1.25rem 1.25rem 0;
+}
+.form-section:last-child { padding-bottom: 1.25rem; }
+
+.section-header {
+  display: flex; align-items: center; gap: .5rem;
+  font-size: .7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--ink-light);
+  margin-bottom: 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--surface-2);
+}
+.section-header i { font-size: .85rem; color: var(--accent); }
+
+.form-label-text {
+  font-size: .78rem; font-weight: 600; color: var(--ink);
+  display: flex; align-items: center; gap: .25rem;
+  margin-bottom: .3rem;
+}
+.req { color: var(--danger); font-size: .7rem; }
+
+.form-control, .form-select {
+  font-size: .82rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  padding: .5rem .75rem;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(91,63,212,.12);
+  background: var(--white);
+  outline: none;
+}
+.form-control.is-invalid { border-color: var(--danger); }
+.invalid-feedback { font-size: .72rem; color: var(--danger); margin-top: .2rem; }
+
+.form-divider {
+  height: 1px; background: var(--surface-2);
+  margin: .25rem 1.25rem 0;
+}
+
+/* Template switcher */
+.template-tabs {
+  display: flex; gap: .4rem;
+  padding: 1rem 1.25rem .75rem;
+  flex-wrap: wrap;
+}
+.template-tab {
+  flex: 1; min-width: 90px;
+  padding: .4rem .5rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink-muted);
+  font-size: .72rem; font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all .15s;
+}
+.template-tab.active {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* Student list */
+.student-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: .85rem;
+  margin-bottom: .65rem;
+  position: relative;
+}
+.student-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .6rem;
+  font-size: .72rem; font-weight: 700; color: var(--ink-muted);
+  text-transform: uppercase; letter-spacing: .8px;
+}
+.btn-remove-student {
+  width: 24px; height: 24px;
+  border: none; border-radius: 6px;
+  background: #fde8e8; color: var(--danger);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: .75rem;
+  transition: background .15s;
+}
+.btn-remove-student:hover { background: #f8c0c0; }
+
+.btn-add-student {
+  width: 100%;
+  border: 1.5px dashed var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--accent);
+  font-size: .78rem; font-weight: 600;
+  padding: .5rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+  transition: all .15s;
+}
+.btn-add-student:hover { border-color: var(--accent); background: var(--accent-bg); }
+.btn-add-student:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Logo upload */
+.logo-upload-area {
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s;
+  background: var(--surface);
+  position: relative;
+}
+.logo-upload-area:hover { border-color: var(--accent); background: var(--accent-bg); }
+.logo-preview-thumb {
+  max-height: 64px; max-width: 100%;
+  object-fit: contain; margin-bottom: .4rem;
+}
+.logo-upload-label { font-size: .75rem; color: var(--ink-light); }
+.logo-upload-label strong { color: var(--accent); }
+#logo-file-input { display: none; }
+.logo-error { font-size: .72rem; color: var(--danger); margin-top: .3rem; }
+.logo-clear-btn {
+  position: absolute; top: 6px; right: 6px;
+  width: 20px; height: 20px;
+  border: none; border-radius: 50%;
+  background: #fde8e8; color: var(--danger);
+  font-size: .65rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── PREVIEW PANEL ── */
+.preview-toolbar {
+  display: flex; align-items: center; gap: .5rem;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: .5rem .75rem;
+  width: 100%;
+  max-width: calc(var(--a4-w) + 40px);
+  flex-wrap: wrap;
+}
+.preview-toolbar-label { font-size: .72rem; color: var(--ink-light); font-weight: 600; margin-right: auto; }
+
+.preview-scroll-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* A4 COVER PAGE — the real rendering */
+.a4-page {
+  width: var(--a4-w);
+  height: var(--a4-h);
+  background: #ffffff;
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 4px 32px rgba(0,0,0,.18);
+  font-family: 'Times New Roman', Times, serif;
+  overflow: hidden;
+}
+
+/* Double border (replicating tikzpicture) */
+.a4-border-outer {
+  position: absolute;
+  top: 0.55in; left: 0.55in;
+  right: 0.55in; bottom: 0.55in;
+  border: 1.1pt solid #000;
+  pointer-events: none;
+  z-index: 2;
+}
+.a4-border-inner {
+  position: absolute;
+  top: 0.62in; left: 0.62in;
+  right: 0.62in; bottom: 0.62in;
+  border: 0.35pt solid #000;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Content sits inside margins */
+.a4-content {
+  position: absolute;
+  top: 0.85in; left: 0.85in;
+  right: 0.85in; bottom: 0.85in;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 1;
+}
+
+/* Typography matching LaTeX */
+.cv-university {
+  font-size: 24px; /* 18pt */
+  font-weight: bold;
+  line-height: 29.3px; /* 22pt */
+  margin-bottom: 0;
+}
+.cv-faculty {
+  font-size: 17.33px; /* 13pt */
+  font-weight: normal;
+  line-height: 21.3px; /* 16pt */
+  margin-top: 0.06in;
+}
+.cv-department {
+  font-size: 18.67px; /* 14pt */
+  font-weight: bold;
+  line-height: 22.67px; /* 17pt */
+  margin-top: 0.04in;
+}
+
+.cv-logo-wrap {
+  margin-top: 0.22in;
+  margin-bottom: 0;
+}
+.cv-logo {
+  width: 1.45in; height: 1.65in;
+  object-fit: contain;
+  display: block; margin: 0 auto;
+}
+.cv-logo-placeholder {
+  width: 1.45in; height: 1.65in;
+  border: 1px dashed #ccc;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #aaa; margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.cv-rule {
+  width: 78%;
+  height: 0.7pt;
+  background: #000;
+  margin-top: 0.28in;
+  margin-bottom: 0;
+  border: none;
+}
+
+.cv-course {
+  font-size: 18.67px; /* 14pt */
+  font-weight: bold;
+  line-height: 22.67px;
+  margin-top: 0.15in;
+}
+.cv-doc-type {
+  font-size: 17.33px; /* 13pt */
+  font-weight: bold;
+  line-height: 21.3px;
+  margin-top: 0.10in;
+}
+.cv-doc-title {
+  font-size: 25.33px; /* 19pt */
+  font-weight: bold;
+  line-height: 30.67px; /* 23pt */
+  margin-top: 0.14in;
+}
+.cv-rule-bottom {
+  width: 78%;
+  height: 0.7pt;
+  background: #000;
+  margin-top: 0.15in;
+  border: none;
+}
+
+/* Submitted By block */
+.cv-submitted-section {
+  margin-top: 0.35in;
+  width: 72%;
+}
+.cv-section-header {
+  font-size: 17.33px; /* 13pt */
+  font-weight: bold;
+  line-height: 21.3px;
+  margin-bottom: 0.12in;
+}
+.cv-info-table {
+  width: auto;
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-size: 16.67px; /* 12.5pt */
+  line-height: 20px; /* 15pt */
+  text-align: left;
+}
+.cv-info-table tr { line-height: 1.28; }
+.cv-info-table td { padding: 1.5px 0; vertical-align: top; }
+.cv-info-table .td-label { font-weight: bold; white-space: nowrap; padding-right: 0; }
+.cv-info-table .td-sep { padding: 0 0.16in 0 0.08in; font-weight: bold; }
+.cv-info-table .td-val { }
+
+/* Experiment block (lab report) */
+.cv-exp-table {
+  width: auto; margin: 0 auto;
+  font-size: 15px;
+  text-align: left;
+  border-collapse: collapse;
+}
+.cv-exp-table td { padding: 2px 0; vertical-align: top; }
+
+/* Submitted To block */
+.cv-submitted-to {
+  margin-top: auto;
+  padding-top: 0.2in;
+  padding-bottom: 0.15in;
+  width: 72%;
+}
+.cv-teacher-name {
+  font-size: 17.33px; font-weight: bold;
+  line-height: 21.3px; margin-top: 0.12in;
+}
+.cv-teacher-detail {
+  font-size: 16.67px; line-height: 20px;
+  margin-top: 0.04in;
+}
+
+/* Group/project student table */
+.cv-group-table {
+  width: 90%; margin: 0 auto;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+.cv-group-table th {
+  font-weight: bold; font-size: 12px;
+  border-bottom: 1px solid #333;
+  padding: 2px 6px;
+  text-align: center;
+}
+.cv-group-table td {
+  padding: 2px 6px; line-height: 1.3;
+  text-align: center;
+}
+.cv-group-table.compact { font-size: 11px; }
+
+/* Lab extra fields */
+.cv-lab-field { font-size: 15.33px; line-height: 1.35; margin-top: 0.07in; }
+.cv-lab-field strong { font-weight: bold; }
+
+/* ── BUTTONS ── */
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: .4rem .9rem;
+  font-size: .78rem; font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; gap: .35rem;
+  transition: background .15s, transform .1s;
+  white-space: nowrap;
+}
+.btn-accent:hover { background: var(--accent-dim); }
+.btn-accent:active { transform: scale(.97); }
+.btn-outline-accent {
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: 8px;
+  padding: .38rem .85rem;
+  font-size: .78rem; font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; gap: .35rem;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.btn-outline-accent:hover { background: var(--accent-bg); }
+
+/* Toast */
+.toast-container {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  z-index: 9999; display: flex; flex-direction: column; gap: .5rem;
+}
+.toast-msg {
+  background: var(--ink); color: #fff;
+  padding: .6rem 1rem; border-radius: 8px;
+  font-size: .78rem; display: flex; align-items: center; gap: .5rem;
+  animation: slideUp .2s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+}
+.toast-msg.success { background: var(--success); }
+.toast-msg.error   { background: var(--danger); }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Storage bar */
+.storage-bar-wrap { padding: 0 1.25rem .75rem; }
+.storage-bar-label { font-size: .68rem; color: var(--ink-light); margin-bottom: .25rem; display: flex; justify-content: space-between; }
+.storage-bar { height: 4px; background: var(--border); border-radius: 2px; }
+.storage-bar-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width .3s; }
+.storage-bar-fill.warn { background: #e67e22; }
+.storage-bar-fill.danger { background: var(--danger); }
+
+/* ── MOBILE ── */
+@media (max-width: 991px) {
+  :root { --sidebar-w: 100%; }
+  .main-layout { flex-direction: column; height: auto; }
+  .form-panel { width: 100%; max-width: 100%; border-right: none; border-bottom: 1.5px solid var(--border); max-height: none; }
+  .preview-panel { padding: 1.5rem 1rem; }
+}
+
+@media (max-width: 639px) {
+  .main-layout { display: block; height: auto; }
+  .form-panel { width: 100%; max-width: 100%; }
+  .preview-panel { display: none; }
+  .preview-panel.mobile-open { display: flex; }
+  .mobile-preview-btn {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%);
+    z-index: 500;
+    box-shadow: 0 4px 20px rgba(91,63,212,.35);
+    padding: .65rem 1.5rem;
+    font-size: .85rem;
+  }
+  .mobile-preview-btn.active { background: #888; }
+}
+
+/* ── PRINT / PDF EXPORT ── */
+@media print {
+  body, html { margin: 0; padding: 0; background: #fff; }
+  .app-header, .form-panel, .preview-toolbar,
+  .toast-container, .mobile-preview-btn { display: none !important; }
+  .main-layout { display: block; height: auto; }
+  .preview-panel { padding: 0; background: #fff; }
+  .preview-scroll-wrap { overflow: visible; }
+  .a4-page {
+    width: 210mm; height: 297mm;
+    box-shadow: none;
+    page-break-after: always;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<header class="app-header">
+  <div class="app-logo"><i class="bi bi-journal-text"></i></div>
+  <div>
+    <div class="app-title">Cover Page Generator</div>
+    <div class="app-subtitle">Academic Document Templates</div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-outline-accent" id="btn-clear-data" title="Clear saved data">
+      <i class="bi bi-trash3"></i><span class="d-none d-md-inline">Clear Data</span>
+    </button>
+    <button class="btn-outline-accent" id="btn-export-png" title="Export PNG">
+      <i class="bi bi-image"></i><span class="d-none d-md-inline">PNG</span>
+    </button>
+    <button class="btn-accent" id="btn-export-pdf" title="Export PDF">
+      <i class="bi bi-file-earmark-pdf"></i><span class="d-none d-md-inline">Export PDF</span>
+    </button>
+  </div>
+</header>
+
+<!-- ══════════ MAIN LAYOUT ══════════ -->
+<div class="main-layout">
+
+  <!-- ── FORM PANEL ── -->
+  <aside class="form-panel" id="form-panel">
+
+    <!-- Template selector -->
+    <div style="padding: 1rem 1.25rem .25rem;">
+      <div class="section-header"><i class="bi bi-layout-text-window-reverse"></i> Template</div>
+    </div>
+    <div class="template-tabs">
+      <button class="template-tab active" data-tpl="assignment">Assignment</button>
+      <button class="template-tab" data-tpl="labReport">Lab Report</button>
+      <button class="template-tab" data-tpl="project">Project</button>
+    </div>
+    <div class="form-divider"></div>
+
+    <!-- Storage bar -->
+    <div class="storage-bar-wrap" style="padding-top:.75rem;">
+      <div class="storage-bar-label">
+        <span>Local Storage</span><span id="storage-text">— KB / 5 MB</span>
+      </div>
+      <div class="storage-bar"><div class="storage-bar-fill" id="storage-bar-fill" style="width:0%"></div></div>
+    </div>
+    <div class="form-divider"></div>
+
+    <!-- ── INSTITUTION SECTION ── -->
+    <div class="form-section">
+      <div class="section-header"><i class="bi bi-building"></i> Institution</div>
+
+      <div class="mb-3">
+        <label class="form-label-text" for="f-uni">University Name <span class="req">*</span></label>
+        <input class="form-control" id="f-uni" type="text" placeholder="e.g. University of Dhaka" autocomplete="off"/>
+        <div class="invalid-feedback" id="err-uni">Required</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label-text" for="f-fac">Faculty Name <span class="req">*</span></label>
+        <input class="form-control" id="f-fac" type="text" placeholder="e.g. Faculty of Engineering and Technology"/>
+        <div class="invalid-feedback" id="err-fac">Required</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label-text" for="f-dept">Department Name <span class="req">*</span></label>
+        <input class="form-control" id="f-dept" type="text" placeholder="e.g. Dept. of Electrical and Electronic Engineering"/>
+        <div class="invalid-feedback" id="err-dept">Required</div>
+      </div>
+
+      <!-- Logo upload -->
+      <div class="mb-1">
+        <label class="form-label-text">University Logo <span style="font-size:.68rem;color:var(--ink-light);font-weight:400;">(PNG/JPG/SVG, max 500 KB)</span></label>
+        <div class="logo-upload-area" id="logo-upload-area" onclick="document.getElementById('logo-file-input').click()">
+          <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/svg+xml"/>
+          <div id="logo-preview-inner">
+            <i class="bi bi-image" style="font-size:1.8rem;color:var(--ink-light);"></i>
+            <div class="logo-upload-label mt-1"><strong>Click to upload</strong> or drag & drop</div>
+          </div>
+          <button class="logo-clear-btn" id="logo-clear-btn" style="display:none;" onclick="event.stopPropagation();clearLogo()">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        <div class="logo-error" id="logo-error" style="display:none;"></div>
+      </div>
+    </div>
+    <div class="form-divider"></div>
+
+    <!-- ── DOCUMENT SECTION ── -->
+    <div class="form-section" id="doc-section">
+      <div class="section-header"><i class="bi bi-file-text"></i> Document Info</div>
+
+      <div class="mb-3">
+        <label class="form-label-text" for="f-course">Course Code & Name <span class="req">*</span></label>
+        <input class="form-control" id="f-course" type="text" placeholder="e.g. 0533-PHY-1203 Optics"/>
+        <div class="invalid-feedback" id="err-course">Required</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label-text" for="f-doctype">Document Type <span class="req">*</span></label>
+        <input class="form-control" id="f-doctype" type="text" placeholder="e.g. Assignment, Lab Report…"/>
+        <div class="invalid-feedback" id="err-doctype">Required</div>
+      </div>
+
+      <!-- Assignment title -->
+      <div class="mb-3" id="field-doctitle">
+        <label class="form-label-text" for="f-doctitle">Document Title <span class="req">*</span></label>
+        <input class="form-control" id="f-doctitle" type="text" placeholder="e.g. Mach–Zehnder Interferometer"/>
+        <div class="invalid-feedback" id="err-doctitle">Required</div>
+      </div>
+
+      <!-- Lab Report extra fields -->
+      <div id="field-lab-extras" style="display:none;">
+        <div class="mb-3">
+          <label class="form-label-text" for="f-expname">Experiment Name <span class="req">*</span></label>
+          <input class="form-control" id="f-expname" type="text" placeholder="e.g. Newton's Rings"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-text" for="f-expno">Experiment No. <span class="req">*</span></label>
+          <input class="form-control" id="f-expno" type="text" placeholder="e.g. 03"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-text" for="f-dateperf">Date of Performance <span class="req">*</span></label>
+          <input class="form-control" id="f-dateperf" type="date"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-text" for="f-datesub">Date of Submission <span class="req">*</span></label>
+          <input class="form-control" id="f-datesub" type="date"/>
+        </div>
+      </div>
+
+      <!-- Project group name -->
+      <div class="mb-3" id="field-groupname" style="display:none;">
+        <label class="form-label-text" for="f-groupname">Group Name / Number</label>
+        <input class="form-control" id="f-groupname" type="text" placeholder="e.g. Group A"/>
+      </div>
+    </div>
+    <div class="form-divider"></div>
+
+    <!-- ── SUBMITTED BY ── -->
+    <div class="form-section" id="student-section">
+      <div class="section-header"><i class="bi bi-person-badge"></i> Submitted By</div>
+
+      <!-- Single student (assignment / lab) -->
+      <div id="single-student">
+        <div class="mb-3">
+          <label class="form-label-text" for="f-name">Name <span class="req">*</span></label>
+          <input class="form-control" id="f-name" type="text" placeholder="e.g. Rifatuzzaman"/>
+          <div class="invalid-feedback" id="err-name">Required</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-text" for="f-regno">Registration No. <span class="req">*</span></label>
+          <input class="form-control" id="f-regno" type="text" placeholder="e.g. 2024613237"/>
+          <div class="invalid-feedback" id="err-regno">Required</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-text" for="f-roll">Class Roll <span class="req">*</span></label>
+          <input class="form-control" id="f-roll" type="text" placeholder="e.g. AE-168-015"/>
+          <div class="invalid-feedback" id="err-roll">Required</div>
+        </div>
+        <div class="mb-1">
+          <label class="form-label-text" for="f-date">Submission Date <span class="req">*</span></label>
+          <input class="form-control" id="f-date" type="date"/>
+          <div class="invalid-feedback" id="err-date">Required</div>
+        </div>
+      </div>
+
+      <!-- Multi student (project) -->
+      <div id="multi-student" style="display:none;">
+        <div id="students-list"></div>
+        <button class="btn-add-student" id="btn-add-student" onclick="addStudent()">
+          <i class="bi bi-person-plus"></i> Add Student (max 10)
+        </button>
+        <div style="font-size:.7rem;color:var(--ink-light);margin-top:.4rem;" id="student-count-label"></div>
+      </div>
+    </div>
+    <div class="form-divider"></div>
+
+    <!-- ── SUBMITTED TO ── -->
+    <div class="form-section">
+      <div class="section-header"><i class="bi bi-person-workspace"></i> Submitted To</div>
+      <div class="mb-3">
+        <label class="form-label-text" for="f-tname">Teacher Name <span class="req">*</span></label>
+        <input class="form-control" id="f-tname" type="text" placeholder="e.g. Imran Hossain Sabuj"/>
+        <div class="invalid-feedback" id="err-tname">Required</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label-text" for="f-tshort">Short Name / Initials</label>
+        <input class="form-control" id="f-tshort" type="text" placeholder="e.g. IHS"/>
+      </div>
+      <div class="mb-3">
+        <label class="form-label-text" for="f-tdesig">Designation</label>
+        <input class="form-control" id="f-tdesig" type="text" placeholder="e.g. Assistant Professor"/>
+      </div>
+      <div class="mb-3">
+        <label class="form-label-text" for="f-tdept">Teacher's Department</label>
+        <input class="form-control" id="f-tdept" type="text" placeholder="e.g. Dept. of EEE"/>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ── PREVIEW PANEL ── -->
+  <main class="preview-panel" id="preview-panel">
+
+    <div class="preview-toolbar">
+      <span class="preview-toolbar-label"><i class="bi bi-eye me-1"></i>Live Preview — A4</span>
+      <button class="btn-outline-accent" onclick="window.print()">
+        <i class="bi bi-printer"></i> Print
+      </button>
+      <button class="btn-outline-accent" id="btn-export-png2">
+        <i class="bi bi-image"></i> PNG
+      </button>
+      <button class="btn-accent" id="btn-export-pdf2">
+        <i class="bi bi-file-earmark-pdf"></i> PDF
+      </button>
+    </div>
+
+    <div class="preview-scroll-wrap">
+      <!-- A4 Page -->
+      <div class="a4-page" id="a4-page">
+        <!-- Double border -->
+        <div class="a4-border-outer"></div>
+        <div class="a4-border-inner"></div>
+
+        <!-- Content -->
+        <div class="a4-content" id="a4-content">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Mobile Preview Toggle -->
+<button class="btn-accent mobile-preview-btn d-sm-none" id="mobile-preview-btn">
+  <i class="bi bi-eye"></i> Preview
+</button>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ══════════ SCRIPTS ══════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+
+<script>
+/* ══════════════════════════════════════════════
+   TEMPLATE CONFIG (inline — mirrors template.json)
+══════════════════════════════════════════════ */
+const TEMPLATE_CONFIG = {
+  assignment: {
+    name: "Assignment",
+    fields: { institution: ["universityName","facultyName","departmentName","logo"], document: ["courseCode","documentType","documentTitle"], submittedBy: ["name","regNo","classRoll","date"], submittedTo: ["teacherName","teacherShortName","teacherDesignation","teacherDepartment"] }
+  },
+  labReport: {
+    name: "Lab Report",
+    fields: { institution: ["universityName","facultyName","departmentName","logo"], document: ["courseCode","documentType","experimentName","experimentNo","dateOfPerformance","dateOfSubmission"], submittedBy: ["name","regNo","classRoll","date"], submittedTo: ["teacherName","teacherShortName","teacherDesignation","teacherDepartment"] }
+  },
+  project: {
+    name: "Project",
+    fields: { institution: ["universityName","facultyName","departmentName","logo"], document: ["courseCode","documentType","documentTitle","groupName"], submittedBy: ["students[]"], submittedTo: ["teacherName","teacherShortName","teacherDesignation","teacherDepartment"] }
+  }
+};
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+const STORAGE_KEY = 'acpg_state_v2';
+const MAX_STUDENTS = 10;
+
+let state = {
+  template: 'assignment',
+  universityName: 'University of Dhaka',
+  facultyName: 'Faculty of Engineering and Technology',
+  departmentName: 'Department of Electrical and Electronic Engineering',
+  logoData: null,
+  courseCode: '0533-PHY-1203 Optics',
+  documentType: 'Assignment',
+  documentTitle: 'Mach\u2013Zehnder Interferometer',
+  experimentName: '', experimentNo: '', dateOfPerformance: '', dateOfSubmission: '',
+  groupName: '',
+  name: 'Rifatuzzaman', regNo: '2024613237', classRoll: 'AE-168-015', date: '2026-06-16',
+  teacherName: 'Imran Hossain Sabuj', teacherShortName: 'IHS',
+  teacherDesignation: '', teacherDepartment: 'Department of Electrical and Electronic Engineering',
+  students: [{ name:'', regNo:'', classRoll:'' }]
+};
+
+let saveTimer = null;
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) { const s = JSON.parse(raw); Object.assign(state, s); }
+  } catch(e) {}
+}
+
+function saveState() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try {
+      const toSave = { ...state };
+      // Warn if logo is large
+      const raw = JSON.stringify(toSave);
+      const kb = (new Blob([raw]).size / 1024).toFixed(1);
+      if (kb > 4500) { showToast('Warning: Storage nearing limit. Consider removing the logo.', 'error'); }
+      localStorage.setItem(STORAGE_KEY, raw);
+      updateStorageBar();
+    } catch(e) { showToast('Could not save — storage may be full.', 'error'); }
+  }, 500);
+}
+
+function updateStorageBar() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY) || '';
+    const kb = (new Blob([raw]).size / 1024);
+    const maxKb = 5000;
+    const pct = Math.min(100, (kb / maxKb) * 100);
+    document.getElementById('storage-bar-fill').style.width = pct + '%';
+    document.getElementById('storage-bar-fill').className = 'storage-bar-fill' + (pct > 80 ? ' danger' : pct > 50 ? ' warn' : '');
+    document.getElementById('storage-text').textContent = `${kb.toFixed(1)} KB / 5 MB`;
+  } catch(e) {}
+}
+
+/* ══════════════════════════════════════════════
+   FORM → STATE BINDINGS
+══════════════════════════════════════════════ */
+function bindInput(id, key, transform) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    state[key] = transform ? transform(el.value) : el.value;
+    saveState(); renderPreview();
+  });
+}
+
+function syncFormToState() {
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; };
+  set('f-uni', state.universityName);
+  set('f-fac', state.facultyName);
+  set('f-dept', state.departmentName);
+  set('f-course', state.courseCode);
+  set('f-doctype', state.documentType);
+  set('f-doctitle', state.documentTitle);
+  set('f-expname', state.experimentName);
+  set('f-expno', state.experimentNo);
+  set('f-dateperf', state.dateOfPerformance);
+  set('f-datesub', state.dateOfSubmission);
+  set('f-groupname', state.groupName);
+  set('f-name', state.name);
+  set('f-regno', state.regNo);
+  set('f-roll', state.classRoll);
+  set('f-date', state.date);
+  set('f-tname', state.teacherName);
+  set('f-tshort', state.teacherShortName);
+  set('f-tdesig', state.teacherDesignation);
+  set('f-tdept', state.teacherDepartment);
+  if (state.logoData) renderLogoPreview(state.logoData);
+  renderStudentList();
+}
+
+function initBindings() {
+  bindInput('f-uni', 'universityName');
+  bindInput('f-fac', 'facultyName');
+  bindInput('f-dept', 'departmentName');
+  bindInput('f-course', 'courseCode');
+  bindInput('f-doctype', 'documentType');
+  bindInput('f-doctitle', 'documentTitle');
+  bindInput('f-expname', 'experimentName');
+  bindInput('f-expno', 'experimentNo');
+  bindInput('f-dateperf', 'dateOfPerformance');
+  bindInput('f-datesub', 'dateOfSubmission');
+  bindInput('f-groupname', 'groupName');
+  bindInput('f-name', 'name');
+  bindInput('f-regno', 'regNo');
+  bindInput('f-roll', 'classRoll');
+  bindInput('f-date', 'date');
+  bindInput('f-tname', 'teacherName');
+  bindInput('f-tshort', 'teacherShortName');
+  bindInput('f-tdesig', 'teacherDesignation');
+  bindInput('f-tdept', 'teacherDepartment');
+}
+
+/* ══════════════════════════════════════════════
+   TEMPLATE SWITCHER
+══════════════════════════════════════════════ */
+document.querySelectorAll('.template-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.template-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.template = btn.dataset.tpl;
+    saveState(); switchTemplate(); renderPreview();
+  });
+});
+
+function switchTemplate() {
+  const t = state.template;
+  // Doc section fields
+  document.getElementById('field-doctitle').style.display  = (t === 'labReport') ? 'none' : '';
+  document.getElementById('field-lab-extras').style.display = (t === 'labReport') ? '' : 'none';
+  document.getElementById('field-groupname').style.display  = (t === 'project')   ? '' : 'none';
+  // Student section
+  document.getElementById('single-student').style.display  = (t === 'project')    ? 'none' : '';
+  document.getElementById('multi-student').style.display   = (t === 'project')    ? '' : 'none';
+  renderStudentList();
+}
+
+/* ══════════════════════════════════════════════
+   STUDENT LIST (project template)
+══════════════════════════════════════════════ */
+function renderStudentList() {
+  const list = document.getElementById('students-list');
+  if (!list) return;
+  if (!state.students || !state.students.length) state.students = [{ name:'', regNo:'', classRoll:'' }];
+  list.innerHTML = '';
+  state.students.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'student-card';
+    card.innerHTML = `
+      <div class="student-card-header">
+        Student ${i+1}
+        <button class="btn-remove-student" onclick="removeStudent(${i})" ${state.students.length <= 1 ? 'disabled' : ''} title="Remove">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      <div class="mb-2">
+        <label class="form-label-text" style="font-size:.72rem;">Name</label>
+        <input class="form-control form-control-sm" value="${esc(s.name)}" oninput="updateStudent(${i},'name',this.value)" placeholder="Student name"/>
+      </div>
+      <div class="mb-2">
+        <label class="form-label-text" style="font-size:.72rem;">Reg. No.</label>
+        <input class="form-control form-control-sm" value="${esc(s.regNo)}" oninput="updateStudent(${i},'regNo',this.value)" placeholder="Registration No."/>
+      </div>
+      <div>
+        <label class="form-label-text" style="font-size:.72rem;">Class Roll</label>
+        <input class="form-control form-control-sm" value="${esc(s.classRoll)}" oninput="updateStudent(${i},'classRoll',this.value)" placeholder="Class Roll"/>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+  const addBtn = document.getElementById('btn-add-student');
+  if (addBtn) addBtn.disabled = state.students.length >= MAX_STUDENTS;
+  const label = document.getElementById('student-count-label');
+  if (label) label.textContent = `${state.students.length} / ${MAX_STUDENTS} students`;
+}
+
+function addStudent() {
+  if (state.students.length >= MAX_STUDENTS) return;
+  state.students.push({ name:'', regNo:'', classRoll:'' });
+  saveState(); renderStudentList(); renderPreview();
+}
+
+function removeStudent(i) {
+  if (state.students.length <= 1) return;
+  state.students.splice(i, 1);
+  saveState(); renderStudentList(); renderPreview();
+}
+
+function updateStudent(i, key, val) {
+  state.students[i][key] = val;
+  saveState(); renderPreview();
+}
+
+/* ══════════════════════════════════════════════
+   LOGO UPLOAD
+══════════════════════════════════════════════ */
+document.getElementById('logo-file-input').addEventListener('change', function() {
+  const file = this.files[0];
+  if (!file) return;
+  const err = document.getElementById('logo-error');
+  if (!['image/png','image/jpeg','image/svg+xml'].includes(file.type)) {
+    err.textContent = 'Only PNG, JPG or SVG allowed.'; err.style.display = 'block'; return;
+  }
+  if (file.size > 500 * 1024) {
+    err.textContent = 'File exceeds 500 KB limit.'; err.style.display = 'block'; return;
+  }
+  err.style.display = 'none';
+  const reader = new FileReader();
+  reader.onload = e => {
+    state.logoData = e.target.result;
+    renderLogoPreview(state.logoData);
+    saveState(); renderPreview();
+  };
+  reader.readAsDataURL(file);
+});
+
+function renderLogoPreview(src) {
+  const inner = document.getElementById('logo-preview-inner');
+  inner.innerHTML = `<img src="${src}" class="logo-preview-thumb" alt="Logo"/>`;
+  document.getElementById('logo-clear-btn').style.display = 'flex';
+}
+
+function clearLogo() {
+  state.logoData = null;
+  document.getElementById('logo-file-input').value = '';
+  document.getElementById('logo-preview-inner').innerHTML = `
+    <i class="bi bi-image" style="font-size:1.8rem;color:var(--ink-light);"></i>
+    <div class="logo-upload-label mt-1"><strong>Click to upload</strong> or drag & drop</div>`;
+  document.getElementById('logo-clear-btn').style.display = 'none';
+  saveState(); renderPreview();
+}
+
+// Drag & drop logo
+const logoArea = document.getElementById('logo-upload-area');
+logoArea.addEventListener('dragover', e => { e.preventDefault(); logoArea.style.borderColor = 'var(--accent)'; });
+logoArea.addEventListener('dragleave', () => { logoArea.style.borderColor = ''; });
+logoArea.addEventListener('drop', e => {
+  e.preventDefault(); logoArea.style.borderColor = '';
+  const file = e.dataTransfer.files[0];
+  if (file) { document.getElementById('logo-file-input').files = e.dataTransfer.files; document.getElementById('logo-file-input').dispatchEvent(new Event('change')); }
+});
+
+/* ══════════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════════ */
+function esc(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtDate(val) {
+  if (!val) return '';
+  try {
+    const d = new Date(val + 'T00:00:00');
+    return d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  } catch(e) { return val; }
+}
+
+function ph(val, fallback) { return val || `<span style="color:#ccc;font-style:italic;">${fallback}</span>`; }
+
+/* ══════════════════════════════════════════════
+   PREVIEW RENDERER
+══════════════════════════════════════════════ */
+function renderPreview() {
+  const c = document.getElementById('a4-content');
+  const t = state.template;
+
+  // Shared header HTML
+  const logoHtml = state.logoData
+    ? `<img src="${state.logoData}" class="cv-logo" alt="Logo"/>`
+    : `<div class="cv-logo-placeholder">No Logo</div>`;
+
+  const teacherDisplay = [state.teacherName, state.teacherShortName ? `[${state.teacherShortName}]` : ''].filter(Boolean).join(' ');
+
+  const headerHtml = `
+    <div class="cv-university">${ph(state.universityName,'University Name')}</div>
+    <div class="cv-faculty">${ph(state.facultyName,'Faculty Name')}</div>
+    <div class="cv-department">${ph(state.departmentName,'Department Name')}</div>
+    <div class="cv-logo-wrap">${logoHtml}</div>
+  `;
+
+  const submittedToHtml = `
+    <div class="cv-submitted-to">
+      <div class="cv-section-header">Submitted To</div>
+      <div class="cv-teacher-name">${ph(teacherDisplay,'Teacher Name')}</div>
+      ${state.teacherDesignation ? `<div class="cv-teacher-detail">${esc(state.teacherDesignation)}</div>` : ''}
+      ${state.teacherDepartment  ? `<div class="cv-teacher-detail">${esc(state.teacherDepartment)}</div>`  : ''}
+    </div>
+  `;
+
+  // ── ASSIGNMENT template ──
+  if (t === 'assignment') {
+    c.innerHTML = `
+      ${headerHtml}
+      <hr class="cv-rule"/>
+      <div class="cv-course">${ph(state.courseCode,'Course Code & Name')}</div>
+      <div class="cv-doc-type">${ph(state.documentType,'Document Type')}</div>
+      <div class="cv-doc-title">${ph(state.documentTitle,'Document Title')}</div>
+      <hr class="cv-rule-bottom"/>
+      <div class="cv-submitted-section">
+        <div class="cv-section-header">Submitted By</div>
+        <table class="cv-info-table">
+          <tr><td class="td-label">Name</td><td class="td-sep">:</td><td class="td-val">${ph(state.name,'—')}</td></tr>
+          <tr><td class="td-label">Registration No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.regNo,'—')}</td></tr>
+          <tr><td class="td-label">Class Roll</td><td class="td-sep">:</td><td class="td-val">${ph(state.classRoll,'—')}</td></tr>
+          <tr><td class="td-label">Date</td><td class="td-sep">:</td><td class="td-val">${state.date ? fmtDate(state.date) : '<span style="color:#ccc;font-style:italic;">—</span>'}</td></tr>
+        </table>
+      </div>
+      ${submittedToHtml}
+    `;
+  }
+
+  // ── LAB REPORT template ──
+  else if (t === 'labReport') {
+    c.innerHTML = `
+      ${headerHtml}
+      <hr class="cv-rule"/>
+      <div class="cv-course">${ph(state.courseCode,'Course Code & Name')}</div>
+      <div class="cv-doc-type">${ph(state.documentType,'Lab Report')}</div>
+      <div class="cv-doc-title">${ph(state.experimentName,'Experiment Name')}</div>
+      <hr class="cv-rule-bottom"/>
+      <div class="cv-submitted-section">
+        <div class="cv-section-header">Submitted By</div>
+        <table class="cv-info-table">
+          <tr><td class="td-label">Name</td><td class="td-sep">:</td><td class="td-val">${ph(state.name,'—')}</td></tr>
+          <tr><td class="td-label">Registration No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.regNo,'—')}</td></tr>
+          <tr><td class="td-label">Class Roll</td><td class="td-sep">:</td><td class="td-val">${ph(state.classRoll,'—')}</td></tr>
+          <tr><td class="td-label">Experiment No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.experimentNo,'—')}</td></tr>
+          <tr><td class="td-label">Date of Performance</td><td class="td-sep">:</td><td class="td-val">${state.dateOfPerformance ? fmtDate(state.dateOfPerformance) : '<span style="color:#ccc;font-style:italic;">—</span>'}</td></tr>
+          <tr><td class="td-label">Date of Submission</td><td class="td-sep">:</td><td class="td-val">${state.dateOfSubmission ? fmtDate(state.dateOfSubmission) : '<span style="color:#ccc;font-style:italic;">—</span>'}</td></tr>
+        </table>
+      </div>
+      ${submittedToHtml}
+    `;
+  }
+
+  // ── PROJECT template ──
+  else if (t === 'project') {
+    const students = state.students || [];
+    const compact = students.length > 5;
+    const tableRows = students.map((s, i) => `
+      <tr>
+        <td>${i+1}</td>
+        <td>${esc(s.name) || '—'}</td>
+        <td>${esc(s.regNo) || '—'}</td>
+        <td>${esc(s.classRoll) || '—'}</td>
+      </tr>
+    `).join('');
+
+    c.innerHTML = `
+      ${headerHtml}
+      <hr class="cv-rule"/>
+      <div class="cv-course">${ph(state.courseCode,'Course Code & Name')}</div>
+      <div class="cv-doc-type">${ph(state.documentType,'Project Report')}</div>
+      <div class="cv-doc-title">${ph(state.documentTitle,'Project Title')}</div>
+      ${state.groupName ? `<div class="cv-doc-type" style="margin-top:.06in;font-weight:normal;">${esc(state.groupName)}</div>` : ''}
+      <hr class="cv-rule-bottom"/>
+      <div class="cv-submitted-section" style="width:85%;">
+        <div class="cv-section-header">Submitted By</div>
+        <table class="cv-group-table ${compact ? 'compact' : ''}">
+          <thead>
+            <tr>
+              <th>#</th><th>Name</th><th>Reg. No.</th><th>Class Roll</th>
+            </tr>
+          </thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+      </div>
+      ${submittedToHtml}
+    `;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   VALIDATION
+══════════════════════════════════════════════ */
+function validate() {
+  let ok = true;
+  const required = {
+    'f-uni':'err-uni', 'f-fac':'err-fac', 'f-dept':'err-dept',
+    'f-course':'err-course', 'f-doctype':'err-doctype',
+    'f-tname':'err-tname'
+  };
+  if (state.template !== 'labReport') required['f-doctitle'] = 'err-doctitle';
+  if (state.template !== 'project') {
+    required['f-name'] = 'err-name';
+    required['f-regno'] = 'err-regno';
+    required['f-roll'] = 'err-roll';
+    required['f-date'] = 'err-date';
+  }
+  Object.entries(required).forEach(([fieldId, errId]) => {
+    const el = document.getElementById(fieldId);
+    const err = document.getElementById(errId);
+    if (!el) return;
+    if (!el.value.trim()) {
+      el.classList.add('is-invalid');
+      if (err) err.style.display = 'block';
+      ok = false;
+    } else {
+      el.classList.remove('is-invalid');
+      if (err) err.style.display = 'none';
+    }
+  });
+  return ok;
+}
+
+// Remove error on input
+document.querySelectorAll('.form-control').forEach(el => {
+  el.addEventListener('input', () => { el.classList.remove('is-invalid'); });
+});
+
+/* ══════════════════════════════════════════════
+   EXPORT
+══════════════════════════════════════════════ */
+async function exportPDF() {
+  if (!validate()) { showToast('Please fill in all required fields.', 'error'); return; }
+  showToast('Generating PDF…');
+  const el = document.getElementById('a4-page');
+  const opt = {
+    margin: 0,
+    filename: `cover-page-${Date.now()}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  try {
+    await html2pdf().set(opt).from(el).save();
+    showToast('PDF exported!', 'success');
+  } catch(e) { showToast('PDF export failed. Try PNG instead.', 'error'); }
+}
+
+async function exportPNG() {
+  if (!validate()) { showToast('Please fill in all required fields.', 'error'); return; }
+  showToast('Generating PNG…');
+  const el = document.getElementById('a4-page');
+  try {
+    const dataUrl = await htmlToImage.toPng(el, { pixelRatio: 3, cacheBust: true });
+    const a = document.createElement('a');
+    a.download = `cover-page-${Date.now()}.png`;
+    a.href = dataUrl; a.click();
+    showToast('PNG exported!', 'success');
+  } catch(e) { showToast('PNG export failed.', 'error'); }
+}
+
+document.getElementById('btn-export-pdf').addEventListener('click', exportPDF);
+document.getElementById('btn-export-pdf2').addEventListener('click', exportPDF);
+document.getElementById('btn-export-png').addEventListener('click', exportPNG);
+document.getElementById('btn-export-png2').addEventListener('click', exportPNG);
+
+/* ══════════════════════════════════════════════
+   CLEAR DATA
+══════════════════════════════════════════════ */
+document.getElementById('btn-clear-data').addEventListener('click', () => {
+  if (!confirm('Clear all saved data and reset to defaults?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = {
+    template: 'assignment', universityName: '', facultyName: '', departmentName: '',
+    logoData: null, courseCode: '', documentType: '', documentTitle: '',
+    experimentName: '', experimentNo: '', dateOfPerformance: '', dateOfSubmission: '',
+    groupName: '', name: '', regNo: '', classRoll: '', date: '',
+    teacherName: '', teacherShortName: '', teacherDesignation: '', teacherDepartment: '',
+    students: [{ name:'', regNo:'', classRoll:'' }]
+  };
+  clearLogo();
+  document.querySelectorAll('.template-tab').forEach(b => b.classList.remove('active'));
+  document.querySelector('[data-tpl="assignment"]').classList.add('active');
+  syncFormToState(); switchTemplate(); renderPreview(); updateStorageBar();
+  showToast('Data cleared.', 'success');
+});
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+function showToast(msg, type='') {
+  const container = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = `toast-msg ${type}`;
+  t.innerHTML = `<i class="bi bi-${type==='success'?'check-circle':type==='error'?'exclamation-triangle':'info-circle'}"></i> ${msg}`;
+  container.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300); }, 3000);
+}
+
+/* ══════════════════════════════════════════════
+   MOBILE PREVIEW TOGGLE
+══════════════════════════════════════════════ */
+const mobileBtn = document.getElementById('mobile-preview-btn');
+const previewPanel = document.getElementById('preview-panel');
+mobileBtn.addEventListener('click', () => {
+  const open = previewPanel.classList.toggle('mobile-open');
+  mobileBtn.innerHTML = open
+    ? '<i class="bi bi-x"></i> Close'
+    : '<i class="bi bi-eye"></i> Preview';
+  mobileBtn.classList.toggle('active', open);
+  if (open) previewPanel.scrollIntoView({ behavior: 'smooth' });
+});
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
+loadState();
+syncFormToState();
+initBindings();
+switchTemplate();
+renderPreview();
+updateStorageBar();
+
+// Sync template tab UI on load
+document.querySelectorAll('.template-tab').forEach(b => {
+  b.classList.toggle('active', b.dataset.tpl === state.template);
+});
+</script>
+</body>
+</html>

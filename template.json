@@ -1,0 +1,222 @@
+{
+  "_schema": "Academic Cover Page Generator — Template Configuration v2.1",
+  "_notes": {
+    "units": "All pt/in values are stored as strings and must be converted via the unitConvert() utility before use in CSS. Conversion: 1in = 96px, 1pt = 1.333px.",
+    "ruleWidth": "Use percentage strings (e.g. '78%') — NOT LaTeX \\textwidth references.",
+    "fields": "Each template's 'fields' array drives both form rendering and validation. 'students[]' denotes a dynamic list field.",
+    "compactThreshold": "For project template: auto-shrink font if student count exceeds this number."
+  },
+  "templates": {
+    "assignment": {
+      "name": "Assignment",
+      "description": "Standard single-student assignment cover page matching LaTeX reference.",
+      "borderStyle": {
+        "outer": "1.1pt",
+        "inner": "0.35pt",
+        "outerOffset": "0.55in",
+        "innerOffset": "0.62in",
+        "gap": "0.07in"
+      },
+      "header": {
+        "universityFontSize": "18pt",
+        "universityLineHeight": "22pt",
+        "facultyFontSize": "13pt",
+        "facultyLineHeight": "16pt",
+        "departmentFontSize": "14pt",
+        "departmentLineHeight": "17pt",
+        "logo": { "width": "1.45in", "height": "1.65in" },
+        "spacingAfterDept": "0.22in",
+        "spacingAfterLogo": "0.28in"
+      },
+      "titleBlock": {
+        "courseFontSize": "14pt",
+        "courseLineHeight": "17pt",
+        "labelFontSize": "13pt",
+        "labelLineHeight": "16pt",
+        "titleFontSize": "19pt",
+        "titleLineHeight": "23pt",
+        "ruleWidth": "78%",
+        "spacingAfterRule1": "0.15in",
+        "spacingBetweenCourseAndLabel": "0.10in",
+        "spacingBetweenLabelAndTitle": "0.14in",
+        "spacingAfterTitle": "0.15in",
+        "spacingBeforeSubmittedBy": "0.35in"
+      },
+      "submittedBy": {
+        "headerFontSize": "13pt",
+        "fontSize": "12.5pt",
+        "lineHeight": "15pt",
+        "rowSpacing": 1.28,
+        "miniPageWidth": "72%"
+      },
+      "submittedTo": {
+        "headerFontSize": "13pt",
+        "nameFontSize": "13pt",
+        "detailFontSize": "12.5pt",
+        "miniPageWidth": "72%"
+      },
+      "fields": {
+        "institution": ["universityName", "facultyName", "departmentName", "logo"],
+        "document": ["courseCode", "documentType", "documentTitle"],
+        "submittedBy": ["name", "regNo", "classRoll", "date"],
+        "submittedTo": ["teacherName", "teacherShortName", "teacherDesignation", "teacherDepartment"]
+      }
+    },
+    "labReport": {
+      "name": "Lab Report",
+      "description": "Laboratory report cover page with experiment metadata.",
+      "borderStyle": {
+        "outer": "1.1pt",
+        "inner": "0.35pt",
+        "outerOffset": "0.55in",
+        "innerOffset": "0.62in",
+        "gap": "0.07in"
+      },
+      "header": {
+        "universityFontSize": "18pt",
+        "universityLineHeight": "22pt",
+        "facultyFontSize": "13pt",
+        "facultyLineHeight": "16pt",
+        "departmentFontSize": "14pt",
+        "departmentLineHeight": "17pt",
+        "logo": { "width": "1.45in", "height": "1.65in" },
+        "spacingAfterDept": "0.22in",
+        "spacingAfterLogo": "0.28in"
+      },
+      "titleBlock": {
+        "courseFontSize": "14pt",
+        "courseLineHeight": "17pt",
+        "labelFontSize": "13pt",
+        "labelLineHeight": "16pt",
+        "titleFontSize": "19pt",
+        "titleLineHeight": "23pt",
+        "ruleWidth": "78%",
+        "spacingAfterRule1": "0.15in",
+        "spacingBetweenCourseAndLabel": "0.10in",
+        "spacingBetweenLabelAndTitle": "0.14in",
+        "spacingAfterTitle": "0.15in",
+        "spacingBeforeSubmittedBy": "0.35in"
+      },
+      "submittedBy": {
+        "headerFontSize": "13pt",
+        "fontSize": "12.5pt",
+        "lineHeight": "15pt",
+        "rowSpacing": 1.28,
+        "miniPageWidth": "72%"
+      },
+      "submittedTo": {
+        "headerFontSize": "13pt",
+        "nameFontSize": "13pt",
+        "detailFontSize": "12.5pt",
+        "miniPageWidth": "72%"
+      },
+      "fields": {
+        "institution": ["universityName", "facultyName", "departmentName", "logo"],
+        "document": ["courseCode", "documentType", "experimentName", "experimentNo", "dateOfPerformance", "dateOfSubmission"],
+        "submittedBy": ["name", "regNo", "classRoll", "date"],
+        "submittedTo": ["teacherName", "teacherShortName", "teacherDesignation", "teacherDepartment"]
+      }
+    },
+    "project": {
+      "name": "Project / Group Report",
+      "description": "Group project cover page with dynamic multi-student table.",
+      "borderStyle": {
+        "outer": "1.1pt",
+        "inner": "0.35pt",
+        "outerOffset": "0.55in",
+        "innerOffset": "0.62in",
+        "gap": "0.07in"
+      },
+      "header": {
+        "universityFontSize": "18pt",
+        "universityLineHeight": "22pt",
+        "facultyFontSize": "13pt",
+        "facultyLineHeight": "16pt",
+        "departmentFontSize": "14pt",
+        "departmentLineHeight": "17pt",
+        "logo": { "width": "1.45in", "height": "1.65in" },
+        "spacingAfterDept": "0.22in",
+        "spacingAfterLogo": "0.28in"
+      },
+      "titleBlock": {
+        "courseFontSize": "14pt",
+        "courseLineHeight": "17pt",
+        "labelFontSize": "13pt",
+        "labelLineHeight": "16pt",
+        "titleFontSize": "19pt",
+        "titleLineHeight": "23pt",
+        "ruleWidth": "78%",
+        "spacingAfterRule1": "0.15in",
+        "spacingBetweenCourseAndLabel": "0.10in",
+        "spacingBetweenLabelAndTitle": "0.14in",
+        "spacingAfterTitle": "0.15in",
+        "spacingBeforeSubmittedBy": "0.35in"
+      },
+      "submittedBy": {
+        "headerFontSize": "13pt",
+        "fontSize": "12.5pt",
+        "lineHeight": "15pt",
+        "rowSpacing": 1.2,
+        "compactFontSize": "11pt",
+        "compactThreshold": 5,
+        "maxStudents": 10,
+        "miniPageWidth": "72%"
+      },
+      "submittedTo": {
+        "headerFontSize": "13pt",
+        "nameFontSize": "13pt",
+        "detailFontSize": "12.5pt",
+        "miniPageWidth": "72%"
+      },
+      "fields": {
+        "institution": ["universityName", "facultyName", "departmentName", "logo"],
+        "document": ["courseCode", "documentType", "documentTitle", "groupName"],
+        "submittedBy": ["students[]"],
+        "submittedTo": ["teacherName", "teacherShortName", "teacherDesignation", "teacherDepartment"]
+      }
+    }
+  },
+  "fieldMeta": {
+    "universityName":      { "label": "University Name",           "type": "text",   "required": true,  "placeholder": "e.g. University of Dhaka" },
+    "facultyName":         { "label": "Faculty Name",              "type": "text",   "required": true,  "placeholder": "e.g. Faculty of Engineering and Technology" },
+    "departmentName":      { "label": "Department Name",           "type": "text",   "required": true,  "placeholder": "e.g. Department of Electrical and Electronic Engineering" },
+    "logo":                { "label": "University Logo",           "type": "file",   "required": false, "accept": "image/png,image/jpeg,image/svg+xml", "maxSizeKB": 500 },
+    "courseCode":          { "label": "Course Code & Name",        "type": "text",   "required": true,  "placeholder": "e.g. 0533-PHY-1203 Optics" },
+    "documentType":        { "label": "Document Type",             "type": "text",   "required": true,  "placeholder": "e.g. Assignment, Lab Report, Project" },
+    "documentTitle":       { "label": "Document / Assignment Title","type": "text",  "required": true,  "placeholder": "e.g. Mach-Zehnder Interferometer" },
+    "experimentName":      { "label": "Experiment Name",           "type": "text",   "required": true,  "placeholder": "e.g. Newton's Rings" },
+    "experimentNo":        { "label": "Experiment No.",            "type": "text",   "required": true,  "placeholder": "e.g. 03" },
+    "dateOfPerformance":   { "label": "Date of Performance",       "type": "date",   "required": true },
+    "dateOfSubmission":    { "label": "Date of Submission",        "type": "date",   "required": true },
+    "groupName":           { "label": "Group Name / Number",       "type": "text",   "required": false, "placeholder": "e.g. Group A / Group 3" },
+    "name":                { "label": "Student Name",              "type": "text",   "required": true,  "placeholder": "e.g. Rifatuzzaman" },
+    "regNo":               { "label": "Registration No.",          "type": "text",   "required": true,  "placeholder": "e.g. 2024613237" },
+    "classRoll":           { "label": "Class Roll",                "type": "text",   "required": true,  "placeholder": "e.g. AE-168-015" },
+    "date":                { "label": "Submission Date",           "type": "date",   "required": true },
+    "teacherName":         { "label": "Teacher Name",              "type": "text",   "required": true,  "placeholder": "e.g. Imran Hossain Sabuj" },
+    "teacherShortName":    { "label": "Short Name / Initials",     "type": "text",   "required": false, "placeholder": "e.g. IHS" },
+    "teacherDesignation":  { "label": "Designation",               "type": "text",   "required": false, "placeholder": "e.g. Assistant Professor" },
+    "teacherDepartment":   { "label": "Teacher's Department",      "type": "text",   "required": false, "placeholder": "e.g. Department of Electrical and Electronic Engineering" }
+  },
+  "latexReference": {
+    "_comment": "This section stores the exact LaTeX source template for audit/traceability. Values here are the ground truth for all spacing and font tokens above.",
+    "source": "\\documentclass[11pt]{article}\n\\usepackage[a4paper,margin=0.85in]{geometry}\n\\usepackage{array}\n\\usepackage{graphicx}\n\\usepackage{setspace}\n\\usepackage{tikz}\n\\pagestyle{empty}\n\\setlength{\\parindent}{0pt}\n\\setlength{\\parskip}{0pt}\n\\begin{document}\n\\begin{titlepage}\n\\thispagestyle{empty}\n\\centering\n\\setstretch{1.15}\n\\begin{tikzpicture}[remember picture,overlay]\n  \\draw[line width=1.1pt]\n    ([xshift=0.55in,yshift=-0.55in]current page.north west)\n    rectangle\n    ([xshift=-0.55in,yshift=0.55in]current page.south east);\n  \\draw[line width=0.35pt]\n    ([xshift=0.62in,yshift=-0.62in]current page.north west)\n    rectangle\n    ([xshift=-0.62in,yshift=0.62in]current page.south east);\n\\end{tikzpicture}\n\\vspace*{0.05in}\n{\\fontsize{18pt}{22pt}\\selectfont\\bfseries University of Dhaka\\par}\n\\vspace{0.06in}\n{\\fontsize{13pt}{16pt}\\selectfont Faculty of Engineering and Technology\\par}\n\\vspace{0.04in}\n{\\fontsize{14pt}{17pt}\\selectfont\\bfseries Department of Electrical and Electronic Engineering\\par}\n\\vspace{0.22in}\n\\includegraphics[width=1.45in,height=1.65in,keepaspectratio]{du_logo.png}\\par\n\\vspace{0.28in}\n\\rule{0.78\\textwidth}{0.7pt}\\par\n\\vspace{0.15in}\n{\\fontsize{14pt}{17pt}\\selectfont\\bfseries 0533-PHY-1203 Optics\\par}\n\\vspace{0.10in}\n{\\fontsize{13pt}{16pt}\\selectfont\\bfseries Assignment\\par}\n\\vspace{0.14in}\n{\\fontsize{19pt}{23pt}\\selectfont\\bfseries Mach--Zehnder Interferometer\\par}\n\\vspace{0.15in}\n\\rule{0.78\\textwidth}{0.7pt}\\par\n\\vspace{0.35in}\n\\begin{minipage}{0.72\\textwidth}\n\\centering\n{\\fontsize{13pt}{16pt}\\selectfont\\bfseries Submitted By\\par}\n\\vspace{0.12in}\n\\renewcommand{\\arraystretch}{1.28}\n\\fontsize{12.5pt}{15pt}\\selectfont\n\\begin{tabular}{@{}>{{\\bfseries}}l@{{\\hspace{0.08in}:\\hspace{0.16in}}}l@{}}\nName & Rifatuzzaman \\\\\nRegistration No. & 2024613237 \\\\\nClass Roll & AE-168-015 \\\\\nDate & 16 June 2026 \\\\\n\\end{tabular}\n\\end{minipage}\\par\n\\vfill\n\\begin{minipage}{0.72\\textwidth}\n\\centering\n{\\fontsize{13pt}{16pt}\\selectfont\\bfseries Submitted To\\par}\n\\vspace{0.12in}\n{\\fontsize{13pt}{16pt}\\selectfont\\bfseries Imran Hossain Sabuj [IHS]\\par}\n\\vspace{0.04in}\n{\\fontsize{12.5pt}{15pt}\\selectfont Department of Electrical and Electronic Engineering\\par}\n{\\fontsize{12.5pt}{15pt}\\selectfont University of Dhaka\\par}\n\\end{minipage}\n\\vspace*{0.15in}\n\\end{titlepage}\n\\end{document}",
+    "defaultValues": {
+      "universityName": "University of Dhaka",
+      "facultyName": "Faculty of Engineering and Technology",
+      "departmentName": "Department of Electrical and Electronic Engineering",
+      "logoFile": "du_logo.png",
+      "courseCode": "0533-PHY-1203 Optics",
+      "documentType": "Assignment",
+      "documentTitle": "Mach\u2013Zehnder Interferometer",
+      "studentName": "Rifatuzzaman",
+      "regNo": "2024613237",
+      "classRoll": "AE-168-015",
+      "date": "16 June 2026",
+      "teacherName": "Imran Hossain Sabuj",
+      "teacherShortName": "IHS",
+      "teacherDepartment": "Department of Electrical and Electronic Engineering",
+      "teacherUniversity": "University of Dhaka"
+    }
+  }
+}
