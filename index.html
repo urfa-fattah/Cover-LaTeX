@@ -388,28 +388,31 @@ body {
   transition: transform .2s ease;
 }
 
-/* A4 COVER PAGE */
+/* A4 COVER PAGE
+   Explicit px (210mm x 297mm @ 96dpi = 794 x 1123px).
+   Avoid var(--a4-w) — html2canvas may not resolve CSS custom properties,
+   causing a blank PDF. overflow:visible prevents clipping during capture. */
 .a4-page {
-  width: var(--a4-w);
-  height: var(--a4-h);
+  width: 794px;
+  height: 1123px;
   background: #ffffff;
   position: relative;
   flex-shrink: 0;
   box-shadow: 0 6px 40px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.08);
   font-family: 'Times New Roman', Times, serif;
-  overflow: hidden;
+  overflow: visible;
 }
 
-/* Double border */
+/* Double border — insets in px matching 794x1123 A4 */
 .a4-border-outer {
   position: absolute;
-  top: 0.55in; left: 0.55in; right: 0.55in; bottom: 0.55in;
+  top: 53px; left: 53px; right: 53px; bottom: 53px;
   border: 1.1pt solid #000;
   pointer-events: none; z-index: 2;
 }
 .a4-border-inner {
   position: absolute;
-  top: 0.62in; left: 0.62in; right: 0.62in; bottom: 0.62in;
+  top: 60px; left: 60px; right: 60px; bottom: 60px;
   border: 0.35pt solid #000;
   pointer-events: none; z-index: 2;
 }
@@ -417,7 +420,7 @@ body {
 /* Content sits inside margins */
 .a4-content {
   position: absolute;
-  top: 0.85in; left: 0.85in; right: 0.85in; bottom: 0.85in;
+  top: 82px; left: 82px; right: 82px; bottom: 82px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -624,7 +627,7 @@ body {
   .preview-panel { padding: 0; background: #fff; display: flex !important; }
   .preview-scroll-wrap { overflow: visible; justify-content: center; }
   .a4-scale-wrap { transform: none !important; }
-  .a4-page { width: 210mm; height: 297mm; box-shadow: none; page-break-after: always; }
+  .a4-page { box-shadow: none; page-break-after: always; }
 }
 
 /* ── FORM FIELD GROUPS ── */
@@ -1494,32 +1497,73 @@ function validate() {
 /* ══════════════════════════════════════════════
    EXPORT
 ══════════════════════════════════════════════ */
+
+// A4 at 96 dpi: 210mm × 297mm = 793.7px × 1122.5px
+const A4_W_PX = 794;
+const A4_H_PX = 1123;
+
+function prepareForCapture() {
+  const el   = document.getElementById('a4-page');
+  const wrap = document.getElementById('a4-scale-wrap');
+
+  // 1. Kill transform so html2canvas sees real dimensions
+  const prevTransform = wrap.style.transform;
+  wrap.style.transform = 'none';
+  wrap.style.transformOrigin = 'top center';
+
+  // 2. Force explicit pixel dimensions on the A4 page
+  //    (CSS custom-property values like var(--a4-w)=210mm are
+  //     sometimes not resolved by html2canvas → blank output)
+  el.style.width    = A4_W_PX + 'px';
+  el.style.height   = A4_H_PX + 'px';
+  el.style.overflow = 'visible';   // prevent clipping during capture
+
+  return { el, wrap, prevTransform };
+}
+
+function restoreAfterCapture({ el, wrap, prevTransform }) {
+  el.style.width    = '';
+  el.style.height   = '';
+  el.style.overflow = '';
+  wrap.style.transform = prevTransform;
+}
+
 async function exportPDF() {
   if (!validate()) { showToast('Please fill in all required fields.', 'error'); return; }
   showToast('Generating PDF…');
 
-  const el = document.getElementById('a4-page');
-  // Temporarily reset any scale transform for clean capture
-  const wrap = document.getElementById('a4-scale-wrap');
-  const prevTransform = wrap.style.transform;
-  wrap.style.transform = 'none';
+  const ctx = prepareForCapture();
+
+  // Let the browser repaint with the reset styles before capturing
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
   const opt = {
-    margin: 0,
+    margin:   0,
     filename: `cover-page-${Date.now()}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 3, useCORS: true, letterRendering: true, allowTaint: true },
+    image:    { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+      scale:           3,
+      useCORS:         true,
+      allowTaint:      true,
+      letterRendering: true,
+      width:           A4_W_PX,
+      height:          A4_H_PX,
+      windowWidth:     A4_W_PX,
+      windowHeight:    A4_H_PX,
+      scrollX:         0,
+      scrollY:         0
+    },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   try {
-    await html2pdf().set(opt).from(el).save();
+    await html2pdf().set(opt).from(ctx.el).save();
     showToast('PDF exported successfully!', 'success');
   } catch(e) {
-    console.error(e);
+    console.error('PDF export error:', e);
     showToast('PDF export failed. Try PNG instead.', 'error');
   } finally {
-    wrap.style.transform = prevTransform;
+    restoreAfterCapture(ctx);
   }
 }
 
@@ -1527,22 +1571,27 @@ async function exportPNG() {
   if (!validate()) { showToast('Please fill in all required fields.', 'error'); return; }
   showToast('Generating PNG…');
 
-  const el = document.getElementById('a4-page');
-  const wrap = document.getElementById('a4-scale-wrap');
-  const prevTransform = wrap.style.transform;
-  wrap.style.transform = 'none';
+  const ctx = prepareForCapture();
+
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
   try {
-    const dataUrl = await htmlToImage.toPng(el, { pixelRatio: 3, cacheBust: true });
+    const dataUrl = await htmlToImage.toPng(ctx.el, {
+      pixelRatio:  3,
+      cacheBust:   true,
+      width:       A4_W_PX,
+      height:      A4_H_PX
+    });
     const a = document.createElement('a');
     a.download = `cover-page-${Date.now()}.png`;
-    a.href = dataUrl; a.click();
+    a.href = dataUrl;
+    a.click();
     showToast('PNG exported successfully!', 'success');
   } catch(e) {
-    console.error(e);
+    console.error('PNG export error:', e);
     showToast('PNG export failed.', 'error');
   } finally {
-    wrap.style.transform = prevTransform;
+    restoreAfterCapture(ctx);
   }
 }
 
@@ -1565,9 +1614,8 @@ function applyZoom(pct) {
   document.getElementById('zoom-label').textContent = `${currentZoom}%`;
 
   // Adjust scroll wrap min height to accommodate scaled A4
-  const mmToPx = 3.7795;
-  const a4PxH = 297 * mmToPx * (currentZoom / 100);
-  document.getElementById('preview-scroll-wrap').style.minHeight = (a4PxH + 40) + 'px';
+  const scaledH = A4_H_PX * (currentZoom / 100);
+  document.getElementById('preview-scroll-wrap').style.minHeight = (scaledH + 40) + 'px';
 }
 
 function changeZoom(delta) { applyZoom(currentZoom + delta); }
@@ -1575,8 +1623,7 @@ function changeZoom(delta) { applyZoom(currentZoom + delta); }
 function fitZoom() {
   const wrap = document.getElementById('preview-panel');
   const availW = wrap.clientWidth - 60;
-  const a4PxW = 210 * 3.7795;
-  const pct = Math.floor((availW / a4PxW) * 100);
+  const pct = Math.floor((availW / A4_W_PX) * 100);
   applyZoom(Math.min(pct, 100));
 }
 
