@@ -4,11 +4,11 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Academic Cover Page Generator</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" crossorigin="anonymous"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" crossorigin="anonymous"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet" crossorigin="anonymous"/>
 
 <style>
 /* ── DESIGN TOKENS ── */
@@ -399,7 +399,7 @@ body {
   position: relative;
   flex-shrink: 0;
   box-shadow: 0 6px 40px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.08);
-  font-family: 'Times New Roman', Times, serif;
+  font-family: var(--cv-font, 'Times New Roman', Times, serif);
   overflow: visible;
 }
 
@@ -407,13 +407,13 @@ body {
 .a4-border-outer {
   position: absolute;
   top: 53px; left: 53px; right: 53px; bottom: 53px;
-  border: 1.1pt solid #000;
+  border: 1.1pt solid var(--cv-border, #000);
   pointer-events: none; z-index: 2;
 }
 .a4-border-inner {
   position: absolute;
   top: 60px; left: 60px; right: 60px; bottom: 60px;
-  border: 0.35pt solid #000;
+  border: 0.35pt solid var(--cv-border, #000);
   pointer-events: none; z-index: 2;
 }
 
@@ -426,6 +426,7 @@ body {
   align-items: center;
   text-align: center;
   z-index: 1;
+  color: var(--cv-text, #000);
 }
 
 /* Typography matching LaTeX */
@@ -443,12 +444,12 @@ body {
   font-family: Arial, sans-serif;
 }
 
-.cv-rule { width: 78%; height: 0.7pt; background: #000; margin-top: 0.28in; margin-bottom: 0; border: none; }
+.cv-rule { width: 78%; height: 0.7pt; background: var(--cv-rule, #000); margin-top: 0.28in; margin-bottom: 0; border: none; }
 
 .cv-course { font-size: 18.67px; font-weight: bold; line-height: 22.67px; margin-top: 0.15in; }
 .cv-doc-type { font-size: 17.33px; font-weight: bold; line-height: 21.3px; margin-top: 0.10in; }
 .cv-doc-title { font-size: 25.33px; font-weight: bold; line-height: 30.67px; margin-top: 0.14in; }
-.cv-rule-bottom { width: 78%; height: 0.7pt; background: #000; margin-top: 0.15in; border: none; }
+.cv-rule-bottom { width: 78%; height: 0.7pt; background: var(--cv-rule, #000); margin-top: 0.15in; border: none; }
 
 /* Submitted By block */
 .cv-submitted-section { margin-top: 0.35in; width: 72%; }
@@ -467,8 +468,8 @@ body {
 /* Submitted To block */
 .cv-submitted-to {
   margin-top: auto;
-  padding-top: 0.15in;
-  padding-bottom: 0.1in;
+  padding-top: 0.42in;
+  padding-bottom: 0.22in;
   width: 72%;
 }
 .cv-teacher-entry { margin-bottom: 0.1in; }
@@ -652,6 +653,68 @@ body {
   padding: 0;
 }
 .section-collapse-btn:hover { color: var(--accent); }
+
+/* ── LAYOUT (BLOCK REORDER) PANEL ── */
+.layout-block-list { display: flex; flex-direction: column; gap: .4rem; }
+.layout-block-item {
+  display: flex; align-items: center; gap: .5rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .5rem .6rem;
+  cursor: grab;
+  transition: border-color .15s, background .15s, opacity .15s;
+}
+.layout-block-item.dragging { opacity: .4; }
+.layout-block-item.drag-over { border-color: var(--accent); background: var(--accent-bg); }
+.layout-block-item.hidden-block { opacity: .5; }
+.layout-block-handle { color: var(--ink-light); font-size: .85rem; flex-shrink: 0; }
+.layout-block-name { flex: 1; font-size: .78rem; font-weight: 600; color: var(--ink); }
+.layout-block-actions { display: flex; align-items: center; gap: .2rem; flex-shrink: 0; }
+.layout-mini-btn {
+  width: 24px; height: 24px;
+  border: none; border-radius: 5px;
+  background: transparent; color: var(--ink-muted);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: .75rem;
+  transition: background .15s, color .15s;
+}
+.layout-mini-btn:hover { background: var(--accent-bg); color: var(--accent); }
+.layout-mini-btn:disabled { opacity: .25; cursor: not-allowed; }
+.layout-mini-btn.active-visible { color: var(--accent); }
+
+/* ── STYLE (APPEARANCE) PANEL ── */
+.style-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .65rem; }
+.style-row .form-label-text { margin-bottom: 0; flex-shrink: 0; }
+.style-row select.form-select, .style-row input[type=range] { max-width: 62%; }
+.color-swatch-group { display: flex; gap: .35rem; }
+.color-swatch-input {
+  width: 30px; height: 30px; padding: 0; border: 1.5px solid var(--border);
+  border-radius: 6px; cursor: pointer; background: none;
+}
+.style-preset-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: .35rem; margin-bottom: .75rem; }
+.style-preset-btn {
+  padding: .4rem .3rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink-muted); font-size: .68rem; font-weight: 600;
+  cursor: pointer; text-align: center; transition: all .15s;
+}
+.style-preset-btn.active { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+
+/* Accordion-style collapsible section body */
+.collapsible-body { overflow: hidden; }
+.collapsible-body.collapsed { display: none; }
+
+/* ── COVER PAGE — user-configurable appearance ──
+   These custom properties are set inline on #a4-page by applyStyleToPage()
+   and inherited by every .cv-* element below, so the whole document's
+   font / text color / rule color / border style can be changed from the
+   Style panel without touching this stylesheet. */
+.a4-page { --cv-font: 'Times New Roman', Times, serif; --cv-text: #000000; --cv-rule: #000000; --cv-border: #000000; }
+.a4-page.border-single .a4-border-inner { display: none; }
+.a4-page.border-none .a4-border-outer, .a4-page.border-none .a4-border-inner { display: none; }
+
+/* Draggable/reorderable blocks inside the live preview */
+.cv-block { width: 100%; display: flex; flex-direction: column; align-items: center; }
 </style>
 </head>
 <body>
@@ -699,6 +762,85 @@ body {
       <button class="template-tab" data-tpl="project">
         <i class="bi bi-people"></i>Project
       </button>
+    </div>
+    <div class="form-divider"></div>
+
+    <!-- ── LAYOUT / REORDER SECTION ── -->
+    <div class="form-section">
+      <div class="section-header">
+        <i class="bi bi-arrows-move"></i> Layout &amp; Order
+        <button class="section-collapse-btn" id="layout-collapse-btn" onclick="toggleCollapse('layout-body','layout-collapse-btn')">
+          <i class="bi bi-chevron-up"></i>
+        </button>
+      </div>
+      <div class="collapsible-body" id="layout-body">
+        <div class="info-tip" style="margin-bottom:.55rem;">
+          <i class="bi bi-info-circle-fill"></i>
+          Drag, or use the arrows, to reorder sections. Tap the eye icon to hide a section from the page.
+        </div>
+        <div class="layout-block-list" id="layout-block-list"></div>
+      </div>
+    </div>
+    <div class="form-divider"></div>
+
+    <!-- ── STYLE / APPEARANCE SECTION ── -->
+    <div class="form-section">
+      <div class="section-header">
+        <i class="bi bi-palette-fill"></i> Appearance
+        <button class="section-collapse-btn" id="style-collapse-btn" onclick="toggleCollapse('style-body','style-collapse-btn')">
+          <i class="bi bi-chevron-up"></i>
+        </button>
+      </div>
+      <div class="collapsible-body" id="style-body">
+        <div class="style-row">
+          <label class="form-label-text" for="f-style-font">Font</label>
+          <select class="form-select form-select-sm" id="f-style-font" style="max-width:62%;">
+            <option value="'Times New Roman', Times, serif">Times New Roman</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="'Palatino Linotype', Palatino, serif">Palatino</option>
+            <option value="Garamond, 'EB Garamond', serif">Garamond</option>
+            <option value="Cambria, serif">Cambria</option>
+            <option value="Arial, Helvetica, sans-serif">Arial</option>
+            <option value="Calibri, 'Segoe UI', sans-serif">Calibri</option>
+          </select>
+        </div>
+        <div class="style-row">
+          <label class="form-label-text" for="f-style-border">Page Border</label>
+          <select class="form-select form-select-sm" id="f-style-border" style="max-width:62%;">
+            <option value="double">Double line</option>
+            <option value="single">Single line</option>
+            <option value="none">No border</option>
+          </select>
+        </div>
+        <div class="style-row">
+          <label class="form-label-text">Text &amp; Rule Color</label>
+          <div class="color-swatch-group">
+            <input type="color" class="color-swatch-input" id="f-style-textcolor" value="#000000" title="Text color"/>
+            <input type="color" class="color-swatch-input" id="f-style-rulecolor" value="#000000" title="Rule / border color"/>
+          </div>
+        </div>
+        <button class="btn-ghost" style="width:100%;justify-content:center;" onclick="resetStyle()">
+          <i class="bi bi-arrow-counterclockwise"></i> Reset appearance
+        </button>
+      </div>
+    </div>
+    <div class="form-divider"></div>
+
+    <!-- ── FIELD PLACEHOLDERS SECTION ── -->
+    <div class="form-section">
+      <div class="section-header">
+        <i class="bi bi-chat-left-text-fill"></i> Field Placeholders
+        <button class="section-collapse-btn" id="ph-collapse-btn" onclick="toggleCollapse('ph-body','ph-collapse-btn')">
+          <i class="bi bi-chevron-down"></i>
+        </button>
+      </div>
+      <div class="collapsible-body collapsed" id="ph-body">
+        <div class="info-tip" style="margin-bottom:.55rem;">
+          <i class="bi bi-info-circle-fill"></i>
+          Change the hint text shown inside any input below. Leave a row blank to keep the default hint.
+        </div>
+        <div id="placeholder-fields-list"></div>
+      </div>
     </div>
     <div class="form-divider"></div>
 
@@ -860,6 +1002,24 @@ body {
         All teachers appear in the "Submitted To" section of the cover page.
       </div>
     </div>
+    <div class="form-divider"></div>
+
+    <!-- ── CUSTOM FIELDS SECTION ── -->
+    <div class="form-section">
+      <div class="section-header"><i class="bi bi-plus-square-fill"></i> Custom Fields</div>
+      <div class="info-tip" style="margin-bottom:.55rem;">
+        <i class="bi bi-info-circle-fill"></i>
+        Add extra lines of text anywhere on the cover page — set their size, position and boldness. A hint (placeholder) is optional.
+      </div>
+      <div id="custom-fields-list"></div>
+      <button class="btn-add-item" id="btn-add-customfield" onclick="addCustomField()">
+        <i class="bi bi-plus-circle-fill"></i> Add Custom Field
+      </button>
+      <div class="info-tip mt-2">
+        <i class="bi bi-info-circle-fill"></i>
+        Reorder or hide a custom field from the "Layout &amp; Order" panel above, alongside the other sections.
+      </div>
+    </div>
 
   </aside>
 
@@ -883,7 +1043,7 @@ body {
       <button class="btn-outline-accent" id="btn-export-png2">
         <i class="bi bi-image"></i><span class="d-none d-lg-inline">PNG</span>
       </button>
-      <button class="btn-outline-accent" id="btn-export-docx2" title="Export as Word (.docx)">
+      <button class="btn-outline-accent" id="btn-export-docx2">
         <i class="bi bi-file-earmark-word-fill"></i><span class="d-none d-lg-inline">DOCX</span>
       </button>
       <button class="btn-accent" id="btn-export-pdf2">
@@ -926,17 +1086,37 @@ body {
 <!-- ══════════ SCRIPTS ══════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
 
 <script>
 /* ══════════════════════════════════════════════
    STATE
 ══════════════════════════════════════════════ */
-const STORAGE_KEY = 'acpg_state_v3';
+const STORAGE_KEY = 'acpg_state_v4';
 const MAX_STUDENTS = 10;
 const MAX_TEACHERS = 5;
+
+/* ── MODIFIABILITY: block registry ──
+   Everything about the cover page's SECTION ORDER is driven from this
+   list + state.blockOrder / state.blockVisibility. To add a brand-new
+   section to the page: (1) add an entry here, (2) add a `blockXxxHtml()`
+   renderer + a `blockXxxDocx()` builder below, (3) add it to
+   DEFAULT_BLOCK_ORDER. The Layout panel, drag-reorder, show/hide, PDF,
+   PNG and DOCX export will all pick it up automatically. */
+const BLOCK_DEFS = {
+  header:      { label: 'Institution Header (University / Faculty / Dept / Logo)', icon: 'bi-building-fill' },
+  titleBlock:  { label: 'Course & Document Title',                                  icon: 'bi-file-earmark-text-fill' },
+  submittedBy: { label: 'Submitted By',                                             icon: 'bi-person-badge-fill' },
+  submittedTo: { label: 'Submitted To',                                             icon: 'bi-person-workspace' }
+};
+const DEFAULT_BLOCK_ORDER = ['header', 'titleBlock', 'submittedBy', 'submittedTo'];
+const DEFAULT_STYLE = {
+  font: "'Times New Roman', Times, serif",
+  border: 'double',
+  textColor: '#000000',
+  ruleColor: '#000000'
+};
 
 let state = {
   template: 'assignment',
@@ -953,7 +1133,16 @@ let state = {
   teachers: [
     { name: 'Imran Hossain Sabuj', shortName: 'IHS', designation: 'Assistant Professor', department: 'Dept. of CSE' }
   ],
-  students: [{ name: '', regNo: '', classRoll: '' }]
+  students: [{ name: '', regNo: '', classRoll: '' }],
+  // User-added extra text lines (see "Custom Fields" section + registerCustomFieldBlocks())
+  customFields: [],
+  // Per-field custom placeholder overrides, keyed by PLACEHOLDER_FIELDS[].key
+  customPlaceholders: {},
+  // User-controlled section order/visibility (see BLOCK_DEFS above)
+  blockOrder: [...DEFAULT_BLOCK_ORDER],
+  blockVisibility: { header: true, titleBlock: true, submittedBy: true, submittedTo: true },
+  // User-controlled appearance
+  style: { ...DEFAULT_STYLE }
 };
 
 let saveTimer = null;
@@ -977,8 +1166,37 @@ function loadState() {
       if (!state.students || !state.students.length) {
         state.students = [{ name: '', regNo: '', classRoll: '' }];
       }
+      if (!Array.isArray(state.customFields)) state.customFields = [];
+      if (!state.customPlaceholders || typeof state.customPlaceholders !== 'object') state.customPlaceholders = {};
+      // NOTE: blockOrder healing is deferred to healBlockOrder(), called
+      // during init AFTER registerCustomFieldBlocks() — otherwise any
+      // custom fields the user added would look "unknown" here and get
+      // silently dropped from the saved order.
+      state.blockVisibility = { header: true, titleBlock: true, submittedBy: true, submittedTo: true, ...(state.blockVisibility || {}) };
+      state.style = { ...DEFAULT_STYLE, ...(state.style || {}) };
     }
   } catch(e) { console.warn('State load error:', e); }
+}
+
+// Re-registers BLOCK_DEFS / BLOCK_RENDERERS / DOCX_BLOCK_BUILDERS entries for
+// every custom field currently in state — needed on load because those
+// registries are runtime-only and aren't part of the saved JSON.
+function registerCustomFieldBlocks() {
+  (state.customFields || []).forEach(f => {
+    BLOCK_DEFS[f.id] = { label: f.label ? f.label : 'Custom Field', icon: 'bi-input-cursor-text' };
+    BLOCK_RENDERERS[f.id] = () => renderCustomFieldBlock(f.id);
+    DOCX_BLOCK_BUILDERS[f.id] = () => buildDocxCustomField(f.id);
+  });
+}
+
+// Keeps state.blockOrder in sync with whatever block ids currently exist
+// (built-in + custom fields) — heals corrupted/old saves and appends any
+// block that isn't in the saved order yet.
+function healBlockOrder() {
+  const knownIds = Object.keys(BLOCK_DEFS);
+  let order = Array.isArray(state.blockOrder) ? state.blockOrder.filter(id => knownIds.includes(id)) : [];
+  knownIds.forEach(id => { if (!order.includes(id)) order.push(id); });
+  state.blockOrder = order;
 }
 
 function saveState() {
@@ -1075,6 +1293,12 @@ document.querySelectorAll('.template-tab').forEach(btn => {
   });
 });
 
+// Built-in per-template default labels for the "Document Type" field.
+// switchTemplate() below only overwrites the field when it's still empty
+// or matches one of these defaults — a custom label the user typed in
+// (e.g. "Term Paper") is never overwritten.
+const TEMPLATE_DOCTYPE_DEFAULTS = { assignment: 'Assignment', labReport: 'Lab Report', project: 'Project Report' };
+
 function switchTemplate() {
   const t = state.template;
   document.getElementById('field-doctitle').style.display  = (t === 'labReport') ? 'none' : '';
@@ -1082,6 +1306,15 @@ function switchTemplate() {
   document.getElementById('field-groupname').style.display  = (t === 'project')   ? ''     : 'none';
   document.getElementById('single-student').style.display   = (t === 'project')   ? 'none' : '';
   document.getElementById('multi-student').style.display    = (t === 'project')   ? ''     : 'none';
+
+  const knownDefaults = Object.values(TEMPLATE_DOCTYPE_DEFAULTS);
+  const current = (state.documentType || '').trim();
+  if (!current || knownDefaults.includes(current)) {
+    state.documentType = TEMPLATE_DOCTYPE_DEFAULTS[t];
+    const dtEl = document.getElementById('f-doctype');
+    if (dtEl) dtEl.value = state.documentType;
+  }
+
   renderStudentList();
 }
 
@@ -1110,7 +1343,7 @@ function renderTeacherList() {
       </div>
       <div class="mb-2">
         <label class="form-label-text" style="font-size:.71rem;">Full Name ${i === 0 ? '<span class="req">*</span>' : ''}</label>
-        <input class="form-control form-control-sm teacher-name-input" value="${esc(t.name)}"
+        <input class="form-control form-control-sm teacher-name-input ph-teacher-name" value="${esc(t.name)}"
           oninput="updateTeacher(${i},'name',this.value)" placeholder="e.g. Dr. Imran Hossain"
           id="t-name-${i}"/>
         ${i === 0 ? `<div class="invalid-feedback" id="err-tname">At least one teacher name is required.</div>` : ''}
@@ -1118,18 +1351,18 @@ function renderTeacherList() {
       <div class="field-row mb-2">
         <div>
           <label class="form-label-text" style="font-size:.71rem;">Initials</label>
-          <input class="form-control form-control-sm" value="${esc(t.shortName)}"
+          <input class="form-control form-control-sm ph-teacher-shortname" value="${esc(t.shortName)}"
             oninput="updateTeacher(${i},'shortName',this.value)" placeholder="e.g. IHS"/>
         </div>
         <div>
           <label class="form-label-text" style="font-size:.71rem;">Designation</label>
-          <input class="form-control form-control-sm" value="${esc(t.designation)}"
+          <input class="form-control form-control-sm ph-teacher-designation" value="${esc(t.designation)}"
             oninput="updateTeacher(${i},'designation',this.value)" placeholder="e.g. Asst. Prof."/>
         </div>
       </div>
       <div>
         <label class="form-label-text" style="font-size:.71rem;">Department</label>
-        <input class="form-control form-control-sm" value="${esc(t.department)}"
+        <input class="form-control form-control-sm ph-teacher-department" value="${esc(t.department)}"
           oninput="updateTeacher(${i},'department',this.value)" placeholder="e.g. Dept. of CSE"/>
       </div>
     `;
@@ -1146,6 +1379,7 @@ function renderTeacherList() {
       ? `Maximum ${MAX_TEACHERS} teachers reached`
       : `${state.teachers.length} / ${MAX_TEACHERS} teachers`;
   }
+  applyPlaceholders();
 }
 
 function addTeacher() {
@@ -1196,18 +1430,18 @@ function renderStudentList() {
       </div>
       <div class="mb-2">
         <label class="form-label-text" style="font-size:.71rem;">Name</label>
-        <input class="form-control form-control-sm" value="${esc(s.name)}"
+        <input class="form-control form-control-sm ph-student-name" value="${esc(s.name)}"
           oninput="updateStudent(${i},'name',this.value)" placeholder="Student name"/>
       </div>
       <div class="field-row">
         <div>
           <label class="form-label-text" style="font-size:.71rem;">Reg. No.</label>
-          <input class="form-control form-control-sm" value="${esc(s.regNo)}"
+          <input class="form-control form-control-sm ph-student-regno" value="${esc(s.regNo)}"
             oninput="updateStudent(${i},'regNo',this.value)" placeholder="Registration No."/>
         </div>
         <div>
           <label class="form-label-text" style="font-size:.71rem;">Class Roll</label>
-          <input class="form-control form-control-sm" value="${esc(s.classRoll)}"
+          <input class="form-control form-control-sm ph-student-classroll" value="${esc(s.classRoll)}"
             oninput="updateStudent(${i},'classRoll',this.value)" placeholder="Class Roll"/>
         </div>
       </div>
@@ -1223,6 +1457,7 @@ function renderStudentList() {
       ? `Maximum ${MAX_STUDENTS} students reached`
       : `${state.students.length} / ${MAX_STUDENTS} students`;
   }
+  applyPlaceholders();
 }
 
 function addStudent() {
@@ -1241,6 +1476,111 @@ function updateStudent(i, key, val) {
   if (!state.students[i]) return;
   state.students[i][key] = val;
   saveState(); renderPreview();
+}
+
+/* ══════════════════════════════════════════════
+   CUSTOM FIELDS — user-added extra lines of text that can be placed
+   anywhere on the cover page. Each one becomes its own block id
+   (custom_<timestamp>) that plugs into the same BLOCK_DEFS /
+   BLOCK_RENDERERS / DOCX_BLOCK_BUILDERS registries as the built-in
+   sections, so it shows up in the "Layout & Order" panel and can be
+   dragged/moved/hidden exactly like any other section.
+══════════════════════════════════════════════ */
+function addCustomField() {
+  const id = 'custom_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+  const field = { id, label: '', placeholder: '', value: '', size: 'medium', bold: false, align: 'center' };
+  state.customFields.push(field);
+  BLOCK_DEFS[id] = { label: 'Custom Field', icon: 'bi-input-cursor-text' };
+  BLOCK_RENDERERS[id] = () => renderCustomFieldBlock(id);
+  DOCX_BLOCK_BUILDERS[id] = () => buildDocxCustomField(id);
+  state.blockOrder.push(id);
+  state.blockVisibility[id] = true;
+  saveState();
+  renderCustomFieldsPanel();
+  renderLayoutPanel();
+  renderPreview();
+}
+
+function removeCustomField(id) {
+  state.customFields = state.customFields.filter(f => f.id !== id);
+  state.blockOrder = state.blockOrder.filter(bid => bid !== id);
+  delete state.blockVisibility[id];
+  delete BLOCK_DEFS[id];
+  delete BLOCK_RENDERERS[id];
+  delete DOCX_BLOCK_BUILDERS[id];
+  saveState();
+  renderCustomFieldsPanel();
+  renderLayoutPanel();
+  renderPreview();
+}
+
+function updateCustomField(id, key, val) {
+  const f = (state.customFields || []).find(x => x.id === id);
+  if (!f) return;
+  f[key] = val;
+  if (key === 'label' && BLOCK_DEFS[id]) {
+    BLOCK_DEFS[id].label = val ? val : 'Custom Field';
+    renderLayoutPanel();
+  }
+  if (key === 'placeholder') {
+    const valueEl = document.getElementById('cf-value-' + id);
+    if (valueEl) valueEl.placeholder = val || 'Enter text…';
+  }
+  saveState();
+  renderPreview();
+}
+
+function renderCustomFieldsPanel() {
+  const list = document.getElementById('custom-fields-list');
+  if (!list) return;
+  list.innerHTML = (state.customFields || []).map((f, i) => `
+    <div class="teacher-card">
+      <div class="teacher-card-header">
+        <div class="teacher-card-num"><span>${i + 1}</span> Custom Field</div>
+        <button class="btn-remove-teacher" onclick="removeCustomField('${f.id}')" title="Remove field">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      <div class="mb-2">
+        <label class="form-label-text" style="font-size:.71rem;">Field Label <span style="font-weight:400;color:var(--ink-light);">(for your reference)</span></label>
+        <input class="form-control form-control-sm" value="${esc(f.label)}"
+          oninput="updateCustomField('${f.id}','label',this.value)" placeholder="e.g. Semester"/>
+      </div>
+      <div class="mb-2">
+        <label class="form-label-text" style="font-size:.71rem;">Text to show on page</label>
+        <input class="form-control form-control-sm" id="cf-value-${f.id}" value="${esc(f.value)}"
+          oninput="updateCustomField('${f.id}','value',this.value)" placeholder="${esc(f.placeholder) || 'Enter text…'}"/>
+      </div>
+      <div class="mb-2">
+        <label class="form-label-text" style="font-size:.71rem;">Placeholder <span style="font-weight:400;color:var(--ink-light);">(optional)</span></label>
+        <input class="form-control form-control-sm" value="${esc(f.placeholder)}"
+          oninput="updateCustomField('${f.id}','placeholder',this.value)" placeholder="Shown as hint when empty"/>
+      </div>
+      <div class="field-row mb-2">
+        <div>
+          <label class="form-label-text" style="font-size:.71rem;">Size</label>
+          <select class="form-select form-select-sm" onchange="updateCustomField('${f.id}','size',this.value)">
+            <option value="small" ${f.size === 'small' ? 'selected' : ''}>Small</option>
+            <option value="medium" ${f.size === 'medium' ? 'selected' : ''}>Medium</option>
+            <option value="large" ${f.size === 'large' ? 'selected' : ''}>Large</option>
+            <option value="xlarge" ${f.size === 'xlarge' ? 'selected' : ''}>Extra Large</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label-text" style="font-size:.71rem;">Position</label>
+          <select class="form-select form-select-sm" onchange="updateCustomField('${f.id}','align',this.value)">
+            <option value="left" ${f.align === 'left' ? 'selected' : ''}>Left</option>
+            <option value="center" ${f.align === 'center' ? 'selected' : ''}>Center</option>
+            <option value="right" ${f.align === 'right' ? 'selected' : ''}>Right</option>
+          </select>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2" style="font-size:.75rem;">
+        <input type="checkbox" id="cf-bold-${f.id}" ${f.bold ? 'checked' : ''} onchange="updateCustomField('${f.id}','bold',this.checked)"/>
+        <label for="cf-bold-${f.id}" style="font-weight:600;color:var(--ink-muted);margin:0;">Bold text</label>
+      </div>
+    </div>
+  `).join('');
 }
 
 /* ══════════════════════════════════════════════
@@ -1316,104 +1656,114 @@ function ph(val, fallback) {
 }
 
 /* ══════════════════════════════════════════════
+   FIELD PLACEHOLDERS — lets the user replace the hint text shown
+   inside any input on the form. Static fields are targeted by id;
+   the repeatable teacher/student fields are targeted by a shared
+   class (one custom hint applies to every card of that field type).
+══════════════════════════════════════════════ */
+const PLACEHOLDER_FIELDS = [
+  { key: 'uni', label: 'University Name', selector: '#f-uni', default: 'e.g. University of Dhaka' },
+  { key: 'fac', label: 'Faculty Name', selector: '#f-fac', default: 'e.g. Faculty of Engineering and Technology' },
+  { key: 'dept', label: 'Department Name', selector: '#f-dept', default: 'e.g. Dept. of CSE' },
+  { key: 'course', label: 'Course Code & Name', selector: '#f-course', default: 'e.g. CSE-3201 Data Structures' },
+  { key: 'doctype', label: 'Document Type', selector: '#f-doctype', default: 'e.g. Assignment, Lab Report…' },
+  { key: 'doctitle', label: 'Document Title', selector: '#f-doctitle', default: 'e.g. Sorting Algorithm Analysis' },
+  { key: 'expname', label: 'Experiment Name', selector: '#f-expname', default: "e.g. Newton's Rings" },
+  { key: 'expno', label: 'Experiment No.', selector: '#f-expno', default: 'e.g. 03' },
+  { key: 'groupname', label: 'Group Name / Number', selector: '#f-groupname', default: 'e.g. Group A' },
+  { key: 'name', label: 'Student Full Name', selector: '#f-name', default: 'e.g. Rafiqul Islam' },
+  { key: 'regno', label: 'Registration No.', selector: '#f-regno', default: 'e.g. 2024613237' },
+  { key: 'roll', label: 'Class Roll', selector: '#f-roll', default: 'e.g. AE-015' },
+  { key: 'teacherName', label: 'Teacher Name', selector: '.ph-teacher-name', default: 'e.g. Dr. Imran Hossain' },
+  { key: 'teacherShortName', label: 'Teacher Initials', selector: '.ph-teacher-shortname', default: 'e.g. IHS' },
+  { key: 'teacherDesignation', label: 'Teacher Designation', selector: '.ph-teacher-designation', default: 'e.g. Asst. Prof.' },
+  { key: 'teacherDepartment', label: 'Teacher Department', selector: '.ph-teacher-department', default: 'e.g. Dept. of CSE' },
+  { key: 'studentName', label: 'Group Student Name', selector: '.ph-student-name', default: 'Student name' },
+  { key: 'studentRegNo', label: 'Group Student Reg. No.', selector: '.ph-student-regno', default: 'Registration No.' },
+  { key: 'studentClassRoll', label: 'Group Student Roll', selector: '.ph-student-classroll', default: 'Class Roll' }
+];
+
+function renderPlaceholderPanel() {
+  const list = document.getElementById('placeholder-fields-list');
+  if (!list) return;
+  list.innerHTML = PLACEHOLDER_FIELDS.map(pf => `
+    <div class="mb-2">
+      <label class="form-label-text" style="font-size:.71rem;">${pf.label}</label>
+      <input class="form-control form-control-sm" value="${esc((state.customPlaceholders || {})[pf.key] || '')}"
+        oninput="updatePlaceholder('${pf.key}', this.value)" placeholder="Default: ${esc(pf.default)}"/>
+    </div>
+  `).join('');
+}
+
+function updatePlaceholder(key, val) {
+  if (!state.customPlaceholders) state.customPlaceholders = {};
+  if (val && val.trim()) state.customPlaceholders[key] = val;
+  else delete state.customPlaceholders[key];
+  saveState();
+  applyPlaceholders();
+}
+
+function applyPlaceholders() {
+  PLACEHOLDER_FIELDS.forEach(pf => {
+    const val = (state.customPlaceholders || {})[pf.key] || pf.default;
+    document.querySelectorAll(pf.selector).forEach(el => { el.placeholder = val; });
+  });
+}
+
+/* ══════════════════════════════════════════════
    PREVIEW RENDERER
 ══════════════════════════════════════════════ */
-function renderPreview() {
-  const c = document.getElementById('a4-content');
-  const t = state.template;
-
+/* ── MODIFIABILITY: one renderer function per block id ──
+   Each function returns an HTML string for its section only. renderPreview()
+   below just looks these up by id and assembles them in state.blockOrder,
+   skipping anything the user hid via state.blockVisibility. Add a new
+   section by adding a new `block*Html()` function + entry in BLOCK_DEFS. */
+function blockHeaderHtml() {
   const logoHtml = state.logoData
     ? `<img src="${state.logoData}" class="cv-logo" alt="Logo"/>`
     : `<div class="cv-logo-placeholder">No Logo</div>`;
-
-  const headerHtml = `
+  return `
     <div class="cv-university">${ph(state.universityName, 'University Name')}</div>
     <div class="cv-faculty">${ph(state.facultyName, 'Faculty Name')}</div>
     <div class="cv-department">${ph(state.departmentName, 'Department Name')}</div>
     <div class="cv-logo-wrap">${logoHtml}</div>
   `;
+}
 
-  // Build submitted-to HTML for all teachers
-  const teachers = (state.teachers || []).filter(t => t.name.trim());
-  let submittedToHtml = '';
-  if (teachers.length > 0) {
-    const teacherEntries = teachers.map((t, i) => {
-      const displayName = [t.name, t.shortName ? `[${t.shortName}]` : ''].filter(Boolean).join(' ');
-      return `
-        ${i > 0 ? '<div class="cv-teacher-divider"></div>' : ''}
-        <div class="cv-teacher-entry">
-          <div class="cv-teacher-name">${esc(displayName)}</div>
-          ${t.designation ? `<div class="cv-teacher-detail">${esc(t.designation)}</div>` : ''}
-          ${t.department  ? `<div class="cv-teacher-detail">${esc(t.department)}</div>`  : ''}
-        </div>
-      `;
-    }).join('');
-
-    submittedToHtml = `
-      <div class="cv-submitted-to">
-        <div class="cv-section-header">Submitted To</div>
-        ${teacherEntries}
-      </div>
-    `;
-  } else {
-    submittedToHtml = `
-      <div class="cv-submitted-to">
-        <div class="cv-section-header">Submitted To</div>
-        <div class="cv-teacher-entry">
-          <div class="cv-teacher-name"><span style="color:#ccc;font-style:italic;">Teacher Name</span></div>
-        </div>
-      </div>
-    `;
-  }
-
-  // ── ASSIGNMENT template ──
+function blockTitleBlockHtml() {
+  const t = state.template;
   if (t === 'assignment') {
-    c.innerHTML = `
-      ${headerHtml}
+    return `
       <hr class="cv-rule"/>
       <div class="cv-course">${ph(state.courseCode, 'Course Code & Name')}</div>
       <div class="cv-doc-type">${ph(state.documentType, 'Document Type')}</div>
       <div class="cv-doc-title">${ph(state.documentTitle, 'Document Title')}</div>
       <hr class="cv-rule-bottom"/>
-      <div class="cv-submitted-section">
-        <div class="cv-section-header">Submitted By</div>
-        <table class="cv-info-table">
-          <tr><td class="td-label">Name</td><td class="td-sep">:</td><td class="td-val">${ph(state.name, '—')}</td></tr>
-          <tr><td class="td-label">Registration No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.regNo, '—')}</td></tr>
-          <tr><td class="td-label">Class Roll</td><td class="td-sep">:</td><td class="td-val">${ph(state.classRoll, '—')}</td></tr>
-          <tr><td class="td-label">Date</td><td class="td-sep">:</td><td class="td-val">${state.date ? fmtDate(state.date) : '<span style="color:#ccc;font-style:italic;">—</span>'}</td></tr>
-        </table>
-      </div>
-      ${submittedToHtml}
     `;
   }
-
-  // ── LAB REPORT template ──
-  else if (t === 'labReport') {
-    c.innerHTML = `
-      ${headerHtml}
+  if (t === 'labReport') {
+    return `
       <hr class="cv-rule"/>
       <div class="cv-course">${ph(state.courseCode, 'Course Code & Name')}</div>
       <div class="cv-doc-type">${ph(state.documentType, 'Lab Report')}</div>
       <div class="cv-doc-title">${ph(state.experimentName, 'Experiment Name')}</div>
       <hr class="cv-rule-bottom"/>
-      <div class="cv-submitted-section">
-        <div class="cv-section-header">Submitted By</div>
-        <table class="cv-info-table">
-          <tr><td class="td-label">Name</td><td class="td-sep">:</td><td class="td-val">${ph(state.name, '—')}</td></tr>
-          <tr><td class="td-label">Registration No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.regNo, '—')}</td></tr>
-          <tr><td class="td-label">Class Roll</td><td class="td-sep">:</td><td class="td-val">${ph(state.classRoll, '—')}</td></tr>
-          <tr><td class="td-label">Experiment No.</td><td class="td-sep">:</td><td class="td-val">${ph(state.experimentNo, '—')}</td></tr>
-          <tr><td class="td-label">Date of Performance</td><td class="td-sep">:</td><td class="td-val">${state.dateOfPerformance ? fmtDate(state.dateOfPerformance) : '<span style="color:#ccc;font-style:italic;">—</span>'}</td></tr>
-          <tr><td class="td-label">Date of Submission</td><td class="td-sep">:</td><td class="td-val">${state.dateOfSubmission ? fmtDate(state.dateOfSubmission) : '<span style="color:#ccc;font-style:italic;">—</span>'}</td></tr>
-        </table>
-      </div>
-      ${submittedToHtml}
     `;
   }
+  // project
+  return `
+    <hr class="cv-rule"/>
+    <div class="cv-course">${ph(state.courseCode, 'Course Code & Name')}</div>
+    <div class="cv-doc-type">${ph(state.documentType, 'Project Report')}</div>
+    <div class="cv-doc-title">${ph(state.documentTitle, 'Project Title')}</div>
+    ${state.groupName ? `<div class="cv-doc-type" style="margin-top:.06in;font-weight:normal;">${esc(state.groupName)}</div>` : ''}
+    <hr class="cv-rule-bottom"/>
+  `;
+}
 
-  // ── PROJECT template ──
-  else if (t === 'project') {
+function blockSubmittedByHtml() {
+  const t = state.template;
+  if (t === 'project') {
     const students = state.students || [];
     const compact = students.length > 5;
     const tableRows = students.map((s, i) => `
@@ -1424,15 +1774,7 @@ function renderPreview() {
         <td>${esc(s.classRoll) || '—'}</td>
       </tr>
     `).join('');
-
-    c.innerHTML = `
-      ${headerHtml}
-      <hr class="cv-rule"/>
-      <div class="cv-course">${ph(state.courseCode, 'Course Code & Name')}</div>
-      <div class="cv-doc-type">${ph(state.documentType, 'Project Report')}</div>
-      <div class="cv-doc-title">${ph(state.documentTitle, 'Project Title')}</div>
-      ${state.groupName ? `<div class="cv-doc-type" style="margin-top:.06in;font-weight:normal;">${esc(state.groupName)}</div>` : ''}
-      <hr class="cv-rule-bottom"/>
+    return `
       <div class="cv-submitted-section" style="width:88%;">
         <div class="cv-section-header">Submitted By</div>
         <table class="cv-group-table ${compact ? 'compact' : ''}">
@@ -1442,67 +1784,260 @@ function renderPreview() {
           <tbody>${tableRows}</tbody>
         </table>
       </div>
-      ${submittedToHtml}
     `;
   }
+  const rows = [
+    ['Name', ph(state.name, '—')],
+    ['Registration No.', ph(state.regNo, '—')],
+    ['Class Roll', ph(state.classRoll, '—')]
+  ];
+  if (t === 'labReport') {
+    rows.push(['Experiment No.', ph(state.experimentNo, '—')]);
+    rows.push(['Date of Performance', state.dateOfPerformance ? fmtDate(state.dateOfPerformance) : '<span style="color:#ccc;font-style:italic;">—</span>']);
+    rows.push(['Date of Submission', state.dateOfSubmission ? fmtDate(state.dateOfSubmission) : '<span style="color:#ccc;font-style:italic;">—</span>']);
+  } else {
+    rows.push(['Date', state.date ? fmtDate(state.date) : '<span style="color:#ccc;font-style:italic;">—</span>']);
+  }
+  return `
+    <div class="cv-submitted-section">
+      <div class="cv-section-header">Submitted By</div>
+      <table class="cv-info-table">
+        ${rows.map(([label, val]) => `<tr><td class="td-label">${label}</td><td class="td-sep">:</td><td class="td-val">${val}</td></tr>`).join('')}
+      </table>
+    </div>
+  `;
+}
+
+function blockSubmittedToHtml() {
+  const teachers = (state.teachers || []).filter(t => t.name.trim());
+  if (teachers.length === 0) {
+    return `
+      <div class="cv-submitted-to">
+        <div class="cv-section-header">Submitted To</div>
+        <div class="cv-teacher-entry">
+          <div class="cv-teacher-name"><span style="color:#ccc;font-style:italic;">Teacher Name</span></div>
+        </div>
+      </div>
+    `;
+  }
+  const teacherEntries = teachers.map((t, i) => {
+    const displayName = [t.name, t.shortName ? `[${t.shortName}]` : ''].filter(Boolean).join(' ');
+    return `
+      ${i > 0 ? '<div class="cv-teacher-divider"></div>' : ''}
+      <div class="cv-teacher-entry">
+        <div class="cv-teacher-name">${esc(displayName)}</div>
+        ${t.designation ? `<div class="cv-teacher-detail">${esc(t.designation)}</div>` : ''}
+        ${t.department  ? `<div class="cv-teacher-detail">${esc(t.department)}</div>`  : ''}
+      </div>
+    `;
+  }).join('');
+  return `
+    <div class="cv-submitted-to">
+      <div class="cv-section-header">Submitted To</div>
+      ${teacherEntries}
+    </div>
+  `;
+}
+
+// Font-size options offered in the Custom Fields panel (px, matches the
+// scale already used by the LaTeX-style cv-* typography above).
+const CF_SIZE_PX = { small: 14, medium: 16.67, large: 20, xlarge: 25.33 };
+
+// Renders one user-added custom field as a block on the live A4 page.
+// Looked up dynamically by id — see registerCustomFieldBlocks()/addCustomField().
+function renderCustomFieldBlock(id) {
+  const f = (state.customFields || []).find(x => x.id === id);
+  if (!f) return '';
+  const px = CF_SIZE_PX[f.size] || CF_SIZE_PX.medium;
+  const text = f.value
+    ? esc(f.value)
+    : `<span style="color:#ccc;font-style:italic;">${esc(f.placeholder) || 'Custom Field'}</span>`;
+  return `<div style="width:100%;text-align:${f.align || 'center'};font-size:${px}px;font-weight:${f.bold ? 'bold' : 'normal'};margin-top:0.12in;line-height:1.3;">${text}</div>`;
+}
+
+const BLOCK_RENDERERS = {
+  header: blockHeaderHtml,
+  titleBlock: blockTitleBlockHtml,
+  submittedBy: blockSubmittedByHtml,
+  submittedTo: blockSubmittedToHtml
+};
+
+function renderPreview() {
+  const c = document.getElementById('a4-content');
+  applyStyleToPage();
+
+  const order = (state.blockOrder && state.blockOrder.length) ? state.blockOrder : DEFAULT_BLOCK_ORDER;
+  c.innerHTML = order
+    .filter(id => state.blockVisibility[id] !== false && BLOCK_RENDERERS[id])
+    .map(id => `<div class="cv-block" data-block="${id}">${BLOCK_RENDERERS[id]()}</div>`)
+    .join('');
+}
+
+/* ══════════════════════════════════════════════
+   APPEARANCE (STYLE) — applies state.style to the live A4 page via
+   CSS custom properties, so the stylesheet stays the single source
+   of truth for spacing/sizing while text/rule color, font and border
+   remain user-configurable.
+══════════════════════════════════════════════ */
+function applyStyleToPage() {
+  const page = document.getElementById('a4-page');
+  if (!page) return;
+  const s = state.style || DEFAULT_STYLE;
+  page.style.setProperty('--cv-font', s.font);
+  page.style.setProperty('--cv-text', s.textColor);
+  page.style.setProperty('--cv-rule', s.ruleColor);
+  page.style.setProperty('--cv-border', s.ruleColor);
+  page.classList.remove('border-single', 'border-none');
+  if (s.border === 'single') page.classList.add('border-single');
+  if (s.border === 'none') page.classList.add('border-none');
+}
+
+function syncStyleFormToState() {
+  const s = state.style || DEFAULT_STYLE;
+  const fontEl = document.getElementById('f-style-font');
+  const borderEl = document.getElementById('f-style-border');
+  const textColorEl = document.getElementById('f-style-textcolor');
+  const ruleColorEl = document.getElementById('f-style-rulecolor');
+  if (fontEl) fontEl.value = s.font;
+  if (borderEl) borderEl.value = s.border;
+  if (textColorEl) textColorEl.value = s.textColor;
+  if (ruleColorEl) ruleColorEl.value = s.ruleColor;
+}
+
+function initStyleBindings() {
+  const fontEl = document.getElementById('f-style-font');
+  const borderEl = document.getElementById('f-style-border');
+  const textColorEl = document.getElementById('f-style-textcolor');
+  const ruleColorEl = document.getElementById('f-style-rulecolor');
+  if (fontEl) fontEl.addEventListener('change', () => { state.style.font = fontEl.value; saveState(); renderPreview(); });
+  if (borderEl) borderEl.addEventListener('change', () => { state.style.border = borderEl.value; saveState(); renderPreview(); });
+  if (textColorEl) textColorEl.addEventListener('input', () => { state.style.textColor = textColorEl.value; saveState(); renderPreview(); });
+  if (ruleColorEl) ruleColorEl.addEventListener('input', () => { state.style.ruleColor = ruleColorEl.value; saveState(); renderPreview(); });
+}
+
+function resetStyle() {
+  state.style = { ...DEFAULT_STYLE };
+  syncStyleFormToState();
+  saveState(); renderPreview();
+  showToast('Appearance reset to default.', 'success');
+}
+
+/* ══════════════════════════════════════════════
+   LAYOUT PANEL — reorder / show-hide the page's sections.
+   Supports both drag-and-drop and up/down buttons (touch-friendly),
+   and an eye toggle to omit a section from the page entirely — so the
+   user can build the cover page with exactly the sections they want,
+   in whatever order they want.
+══════════════════════════════════════════════ */
+let dragBlockId = null;
+
+function renderLayoutPanel() {
+  const list = document.getElementById('layout-block-list');
+  if (!list) return;
+  const order = state.blockOrder;
+  list.innerHTML = order.map((id, i) => {
+    const def = BLOCK_DEFS[id];
+    if (!def) return '';
+    const visible = state.blockVisibility[id] !== false;
+    return `
+      <div class="layout-block-item${visible ? '' : ' hidden-block'}" draggable="true" data-block="${id}"
+        ondragstart="onBlockDragStart(event,'${id}')" ondragover="onBlockDragOver(event,'${id}')"
+        ondragleave="onBlockDragLeave(event)" ondrop="onBlockDrop(event,'${id}')" ondragend="onBlockDragEnd(event)">
+        <i class="bi bi-grip-vertical layout-block-handle"></i>
+        <span class="layout-block-name">${def.label}</span>
+        <div class="layout-block-actions">
+          <button class="layout-mini-btn" onclick="moveBlock('${id}',-1)" ${i === 0 ? 'disabled' : ''} title="Move up"><i class="bi bi-chevron-up"></i></button>
+          <button class="layout-mini-btn" onclick="moveBlock('${id}',1)" ${i === order.length - 1 ? 'disabled' : ''} title="Move down"><i class="bi bi-chevron-down"></i></button>
+          <button class="layout-mini-btn${visible ? ' active-visible' : ''}" onclick="toggleBlockVisibility('${id}')" title="${visible ? 'Hide section' : 'Show section'}">
+            <i class="bi ${visible ? 'bi-eye-fill' : 'bi-eye-slash-fill'}"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function moveBlock(id, dir) {
+  const order = state.blockOrder;
+  const i = order.indexOf(id);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= order.length) return;
+  [order[i], order[j]] = [order[j], order[i]];
+  saveState(); renderLayoutPanel(); renderPreview();
+}
+
+function toggleBlockVisibility(id) {
+  state.blockVisibility[id] = state.blockVisibility[id] === false ? true : false;
+  saveState(); renderLayoutPanel(); renderPreview();
+}
+
+function onBlockDragStart(e, id) {
+  dragBlockId = id;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onBlockDragOver(e, id) {
+  e.preventDefault();
+  if (id !== dragBlockId) e.currentTarget.classList.add('drag-over');
+}
+function onBlockDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+function onBlockDrop(e, targetId) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!dragBlockId || dragBlockId === targetId) return;
+  const order = state.blockOrder;
+  const from = order.indexOf(dragBlockId);
+  const to = order.indexOf(targetId);
+  if (from < 0 || to < 0) return;
+  order.splice(from, 1);
+  order.splice(to, 0, dragBlockId);
+  saveState(); renderLayoutPanel(); renderPreview();
+}
+function onBlockDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  dragBlockId = null;
+}
+
+function toggleCollapse(bodyId, btnId) {
+  const body = document.getElementById(bodyId);
+  const btn = document.getElementById(btnId);
+  if (!body) return;
+  body.classList.toggle('collapsed');
+  const icon = btn ? btn.querySelector('i') : null;
+  if (icon) icon.className = body.classList.contains('collapsed') ? 'bi bi-chevron-down' : 'bi bi-chevron-up';
 }
 
 /* ══════════════════════════════════════════════
    VALIDATION
 ══════════════════════════════════════════════ */
+/* Exports are never blocked — a person may want a mostly-blank template
+   (to fill in by hand later) or a fully-filled document. This function
+   only adds a soft, non-blocking visual nudge (asterisked fields get a
+   light highlight) for fields that are still empty; it never prevents
+   PDF / PNG / DOCX generation. */
 function validate() {
-  let ok = true;
-
-  const required = {
-    'f-uni': 'err-uni',
-    'f-fac': 'err-fac',
-    'f-dept': 'err-dept',
-    'f-course': 'err-course',
-    'f-doctype': 'err-doctype'
+  const recommended = {
+    'f-uni': 'err-uni', 'f-fac': 'err-fac', 'f-dept': 'err-dept',
+    'f-course': 'err-course', 'f-doctype': 'err-doctype'
   };
-
-  if (state.template !== 'labReport') required['f-doctitle'] = 'err-doctitle';
+  if (state.template !== 'labReport') recommended['f-doctitle'] = 'err-doctitle';
   if (state.template !== 'project') {
-    required['f-name']  = 'err-name';
-    required['f-regno'] = 'err-regno';
-    required['f-roll']  = 'err-roll';
-    required['f-date']  = 'err-date';
+    recommended['f-name'] = 'err-name'; recommended['f-regno'] = 'err-regno';
+    recommended['f-roll'] = 'err-roll'; recommended['f-date'] = 'err-date';
   }
-
-  Object.entries(required).forEach(([fieldId, errId]) => {
-    const el  = document.getElementById(fieldId);
+  let anyEmpty = false;
+  Object.entries(recommended).forEach(([fieldId, errId]) => {
+    const el = document.getElementById(fieldId);
     const err = document.getElementById(errId);
     if (!el) return;
-    if (!el.value.trim()) {
-      el.classList.add('is-invalid');
-      if (err) err.style.display = 'block';
-      ok = false;
-    } else {
-      el.classList.remove('is-invalid');
-      if (err) err.style.display = 'none';
-    }
+    const empty = !el.value.trim();
+    el.classList.toggle('is-invalid', empty);
+    if (err) err.style.display = empty ? 'block' : 'none';
+    if (empty) anyEmpty = true;
   });
-
-  // Validate at least one teacher name
-  const firstTeacherInput = document.getElementById('t-name-0');
-  const firstTeacherErr   = document.getElementById('err-tname');
-  const hasTeacher = state.teachers.some(t => t.name.trim());
-  if (!hasTeacher) {
-    if (firstTeacherInput) firstTeacherInput.classList.add('is-invalid');
-    if (firstTeacherErr)   firstTeacherErr.style.display = 'block';
-    ok = false;
-  } else {
-    if (firstTeacherInput) firstTeacherInput.classList.remove('is-invalid');
-    if (firstTeacherErr)   firstTeacherErr.style.display = 'none';
-  }
-
-  if (!ok) {
-    // Scroll to first error
-    const firstErr = document.querySelector('.is-invalid');
-    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  return ok;
+  return !anyEmpty; // informational only — callers are free to ignore this
 }
 
 /* ══════════════════════════════════════════════
@@ -1529,18 +2064,25 @@ function prepareForCapture() {
   el.style.height   = A4_H_PX + 'px';
   el.style.overflow = 'visible';   // prevent clipping during capture
 
-  return { el, wrap, prevTransform };
+  // 3. The dashed "No Logo" placeholder is an editing aid for the live
+  //    preview only — a finished document should never show it, so hide
+  //    it just for the capture and restore it afterward.
+  const hiddenPlaceholders = Array.from(el.querySelectorAll('.cv-logo-placeholder'));
+  hiddenPlaceholders.forEach(p => { p.dataset.prevDisplay = p.style.display; p.style.display = 'none'; });
+
+  return { el, wrap, prevTransform, hiddenPlaceholders };
 }
 
-function restoreAfterCapture({ el, wrap, prevTransform }) {
+function restoreAfterCapture({ el, wrap, prevTransform, hiddenPlaceholders }) {
   el.style.width    = '';
   el.style.height   = '';
   el.style.overflow = '';
   wrap.style.transform = prevTransform;
+  (hiddenPlaceholders || []).forEach(p => { p.style.display = p.dataset.prevDisplay || ''; delete p.dataset.prevDisplay; });
 }
 
 async function exportPDF() {
-  if (!validate()) { showToast('Please fill in all required fields.', 'error'); return; }
+  validate(); // soft highlight only — does not block export
   showToast('Generating PDF…');
 
   const ctx = prepareForCapture();
@@ -1579,7 +2121,7 @@ async function exportPDF() {
 }
 
 async function exportPNG() {
-  if (!validate()) { showToast('Please fill in all required fields.', 'error'); return; }
+  validate(); // soft highlight only — does not block export
   showToast('Generating PNG…');
 
   const ctx = prepareForCapture();
@@ -1607,318 +2149,239 @@ async function exportPNG() {
 }
 
 /* ══════════════════════════════════════════════
-   DOCX EXPORT (native, editable Word document)
-   Built with the docx.js library — mirrors the
-   live preview's typography/layout, not a screenshot.
+   DOCX EXPORT
+   Builds a native, editable Word document that mirrors the live A4
+   preview: same section order (state.blockOrder), same visibility
+   (state.blockVisibility), same template-specific content, and the
+   logo image embedded inline. Uses the `docx` UMD library (window.docx).
+   Because it's a real .docx (not a picture of the page), the user can
+   keep editing it in Word afterward — filled in fully, partially, or
+   left blank, exactly as they left the form.
 ══════════════════════════════════════════════ */
 
-const DOCX_FONT = 'Times New Roman';
-
-// px (as used in preview CSS) → half-points for docx font "size"
-function px2hpt(px) { return Math.round(px * 1.5); }
-
-function dataUrlToUint8Array(dataUrl) {
-  const base64 = dataUrl.split(',')[1] || '';
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return bytes;
+// Convert a data: URL (from FileReader) into a raw byte array docx can embed.
+async function dataUrlToUint8Array(dataUrl) {
+  const res = await fetch(dataUrl);
+  const buf = await res.arrayBuffer();
+  return new Uint8Array(buf);
 }
 
-function docxImageType(dataUrl) {
-  const m = /^data:image\/([a-zA-Z0-9.+-]+);base64/.exec(dataUrl || '');
-  if (!m) return null;
-  let t = m[1].toLowerCase();
-  if (t === 'jpeg') t = 'jpg';
-  if (t === 'svg+xml') t = 'svg';
-  return t;
+function docxPlain(val, fallback) {
+  return (val && String(val).trim()) ? String(val).trim() : fallback;
 }
 
-const DOCX_NO_BORDERS = {
-  top:    { style: 'none' },
-  bottom: { style: 'none' },
-  left:   { style: 'none' },
-  right:  { style: 'none' }
+async function buildLogoImageRun() {
+  if (!state.logoData) return null;
+  // docx's ImageRun only accepts raster formats (png/jpg/gif/bmp) — skip
+  // silently for SVG logos rather than producing a broken document.
+  if (state.logoData.startsWith('data:image/svg')) return null;
+  try {
+    const bytes = await dataUrlToUint8Array(state.logoData);
+    const type = state.logoData.startsWith('data:image/png') ? 'png' : 'jpg';
+    return new docx.ImageRun({
+      type,
+      data: bytes,
+      transformation: { width: 139, height: 158 } // ≈1.45in × 1.65in @96dpi
+    });
+  } catch (e) {
+    console.warn('Logo embed skipped:', e);
+    return null;
+  }
+}
+
+function docxCenteredPara(text, { bold = false, size = 24, spacingAfter = 80, color } = {}) {
+  const { Paragraph, TextRun, AlignmentType } = docx;
+  return new Paragraph({
+    alignment: AlignmentType.CENTER,
+    spacing: { after: spacingAfter },
+    children: [ new TextRun({ text, bold, size, color: color || undefined }) ]
+  });
+}
+
+function docxRuleParagraph(color) {
+  const { Paragraph, BorderStyle } = docx;
+  return new Paragraph({
+    spacing: { before: 120, after: 120 },
+    border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: (color || '#000000').replace('#','') } }
+  });
+}
+
+async function buildDocxHeaderChildren() {
+  const { Paragraph, AlignmentType } = docx;
+  const children = [
+    docxCenteredPara(docxPlain(state.universityName, 'University Name'), { bold: true, size: 32, spacingAfter: 40 }),
+    docxCenteredPara(docxPlain(state.facultyName, 'Faculty Name'), { size: 24, spacingAfter: 40 }),
+    docxCenteredPara(docxPlain(state.departmentName, 'Department Name'), { bold: true, size: 26, spacingAfter: 160 })
+  ];
+  const logo = await buildLogoImageRun();
+  if (logo) {
+    children.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [logo] }));
+  }
+  return children;
+}
+
+function buildDocxTitleBlockChildren() {
+  const s = state.style || DEFAULT_STYLE;
+  const t = state.template;
+  const children = [ docxRuleParagraph(s.ruleColor) ];
+  if (t === 'assignment') {
+    children.push(
+      docxCenteredPara(docxPlain(state.courseCode, 'Course Code & Name'), { bold: true, size: 26, spacingAfter: 60 }),
+      docxCenteredPara(docxPlain(state.documentType, 'Document Type'), { bold: true, size: 24, spacingAfter: 60 }),
+      docxCenteredPara(docxPlain(state.documentTitle, 'Document Title'), { bold: true, size: 34, spacingAfter: 160 })
+    );
+  } else if (t === 'labReport') {
+    children.push(
+      docxCenteredPara(docxPlain(state.courseCode, 'Course Code & Name'), { bold: true, size: 26, spacingAfter: 60 }),
+      docxCenteredPara(docxPlain(state.documentType, 'Lab Report'), { bold: true, size: 24, spacingAfter: 60 }),
+      docxCenteredPara(docxPlain(state.experimentName, 'Experiment Name'), { bold: true, size: 34, spacingAfter: 160 })
+    );
+  } else {
+    children.push(
+      docxCenteredPara(docxPlain(state.courseCode, 'Course Code & Name'), { bold: true, size: 26, spacingAfter: 60 }),
+      docxCenteredPara(docxPlain(state.documentType, 'Project Report'), { bold: true, size: 24, spacingAfter: 60 }),
+      docxCenteredPara(docxPlain(state.documentTitle, 'Project Title'), { bold: true, size: 34, spacingAfter: 60 })
+    );
+    if (state.groupName) children.push(docxCenteredPara(state.groupName, { size: 24, spacingAfter: 60 }));
+  }
+  children.push(docxRuleParagraph(s.ruleColor));
+  return children;
+}
+
+function docxLabelValueTable(rows) {
+  const { Table, TableRow, TableCell, Paragraph, TextRun, WidthType, BorderStyle, AlignmentType } = docx;
+  const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+  return new Table({
+    alignment: AlignmentType.CENTER,
+    width: { size: 60, type: WidthType.PERCENTAGE },
+    borders: { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder, insideHorizontal: noBorder, insideVertical: noBorder },
+    rows: rows.map(([label, value]) => new TableRow({
+      children: [
+        new TableCell({ width: { size: 40, type: WidthType.PERCENTAGE }, children: [new Paragraph({ children: [new TextRun({ text: label, bold: true, size: 22 })] })] }),
+        new TableCell({ width: { size: 60, type: WidthType.PERCENTAGE }, children: [new Paragraph({ children: [new TextRun({ text: value, size: 22 })] })] })
+      ]
+    }))
+  });
+}
+
+function buildDocxSubmittedByChildren() {
+  const { Paragraph, Table, TableRow, TableCell, TextRun, WidthType, AlignmentType, BorderStyle } = docx;
+  const t = state.template;
+  const children = [ docxCenteredPara('Submitted By', { bold: true, size: 24, spacingAfter: 100 }) ];
+
+  if (t === 'project') {
+    const students = state.students || [];
+    const edge = { style: BorderStyle.SINGLE, size: 4, color: '333333' };
+    const table = new Table({
+      alignment: AlignmentType.CENTER,
+      width: { size: 90, type: WidthType.PERCENTAGE },
+      borders: { top: edge, bottom: edge, left: edge, right: edge, insideHorizontal: edge, insideVertical: edge },
+      rows: [
+        new TableRow({ children: ['#', 'Name', 'Reg. No.', 'Class Roll'].map(h =>
+          new TableCell({ children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: h, bold: true, size: 20 })] })] })
+        )}),
+        ...students.map((st, i) => new TableRow({ children: [
+          String(i + 1), docxPlain(st.name, '—'), docxPlain(st.regNo, '—'), docxPlain(st.classRoll, '—')
+        ].map(v => new TableCell({ children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: v, size: 20 })] })] }))}))
+      ]
+    });
+    children.push(table);
+    return children;
+  }
+
+  const rows = [
+    ['Name', docxPlain(state.name, '—')],
+    ['Registration No.', docxPlain(state.regNo, '—')],
+    ['Class Roll', docxPlain(state.classRoll, '—')]
+  ];
+  if (t === 'labReport') {
+    rows.push(['Experiment No.', docxPlain(state.experimentNo, '—')]);
+    rows.push(['Date of Performance', state.dateOfPerformance ? fmtDate(state.dateOfPerformance) : '—']);
+    rows.push(['Date of Submission', state.dateOfSubmission ? fmtDate(state.dateOfSubmission) : '—']);
+  } else {
+    rows.push(['Date', state.date ? fmtDate(state.date) : '—']);
+  }
+  children.push(docxLabelValueTable(rows));
+  return children;
+}
+
+function buildDocxSubmittedToChildren() {
+  const children = [ docxCenteredPara('Submitted To', { bold: true, size: 24, spacingAfter: 100 }) ];
+  const teachers = (state.teachers || []).filter(t => t.name.trim());
+  if (teachers.length === 0) {
+    children.push(docxCenteredPara('Teacher Name', { size: 22 }));
+    return children;
+  }
+  teachers.forEach(t => {
+    const displayName = [t.name, t.shortName ? `[${t.shortName}]` : ''].filter(Boolean).join(' ');
+    children.push(docxCenteredPara(displayName, { bold: true, size: 22, spacingAfter: 20 }));
+    if (t.designation) children.push(docxCenteredPara(t.designation, { size: 20, spacingAfter: 20 }));
+    if (t.department) children.push(docxCenteredPara(t.department, { size: 20, spacingAfter: 100 }));
+  });
+  return children;
+}
+
+// DOCX size map is in half-points (docx's TextRun `size`), matching the
+// convention already used by the other builders above (e.g. size:22 ≈ 11pt).
+function buildDocxCustomField(id) {
+  const { Paragraph, TextRun, AlignmentType } = docx;
+  const f = (state.customFields || []).find(x => x.id === id);
+  if (!f) return [];
+  const sizeMap = { small: 20, medium: 22, large: 26, xlarge: 32 };
+  const alignMap = { left: AlignmentType.LEFT, center: AlignmentType.CENTER, right: AlignmentType.RIGHT };
+  const text = docxPlain(f.value, f.placeholder || '');
+  if (!text) return [];
+  return [ new Paragraph({
+    alignment: alignMap[f.align] || AlignmentType.CENTER,
+    spacing: { after: 80 },
+    children: [ new TextRun({ text, bold: !!f.bold, size: sizeMap[f.size] || sizeMap.medium }) ]
+  }) ];
+}
+
+const DOCX_BLOCK_BUILDERS = {
+  header: buildDocxHeaderChildren,          // async
+  titleBlock: buildDocxTitleBlockChildren,  // sync
+  submittedBy: buildDocxSubmittedByChildren,// sync
+  submittedTo: buildDocxSubmittedToChildren // sync
 };
 
-function buildDocxDocument() {
-  const {
-    Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
-    WidthType, AlignmentType, BorderStyle, ImageRun, VerticalAlign, HeightRule
-  } = docx;
-
-  const CENTER = AlignmentType.CENTER;
-
-  // ── text run helper honoring the same placeholder logic as ph() ──
-  function run(val, fallback, opts = {}) {
-    const hasVal = val && String(val).trim();
-    return new TextRun({
-      text: hasVal ? String(val) : (fallback || ''),
-      font: DOCX_FONT,
-      italics: !hasVal,
-      color: hasVal ? '000000' : '999999',
-      ...opts
-    });
-  }
-
-  function para(children, opts = {}) {
-    return new Paragraph({ alignment: CENTER, children, ...opts });
-  }
-
-  function hr() {
-    return new Paragraph({
-      alignment: CENTER,
-      spacing: { before: 220, after: 0 },
-      border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000' } },
-      children: [new TextRun({ text: '', font: DOCX_FONT })]
-    });
-  }
-
-  // topChildren = header → title → "Submitted By" (anchored to the top of the frame)
-  // bottomChildren = "Submitted To" (anchored to the bottom of the frame, like the
-  // live preview's margin-top:auto flex spacer) so the frame fills the whole A4 page
-  // instead of hugging the content. Since Word can't do flex spacers, the gap between
-  // them is faked with a table row sized dynamically (see topHeight/bottomHeight below)
-  // to fit whatever content is actually present, so nothing ever overflows to page 2.
-  const children = [];
-  let topHeight = 0;
-  function pushTop(node, h) { children.push(node); topHeight += h; }
-
-  // ── Institution header ──
-  pushTop(para([run(state.universityName, 'University Name', { bold: true, size: px2hpt(24) })]), 460);
-  pushTop(para([run(state.facultyName, 'Faculty Name', { size: px2hpt(17.33) })], { spacing: { before: 60 } }), 400);
-  pushTop(para([run(state.departmentName, 'Department Name', { bold: true, size: px2hpt(18.67) })], { spacing: { before: 40 } }), 400);
-
-  // ── Logo ──
-  let logoNote = null;
-  if (state.logoData) {
-    const imgType = docxImageType(state.logoData);
-    if (imgType && imgType !== 'svg') {
-      try {
-        const bytes = dataUrlToUint8Array(state.logoData);
-        pushTop(para(
-          [new ImageRun({ type: imgType, data: bytes, transformation: { width: 139, height: 158 } })],
-          { spacing: { before: 260 } }
-        ), 2700);
-      } catch (e) {
-        console.error('DOCX logo embed error:', e);
-        logoNote = 'unembeddable';
-      }
-    } else if (imgType === 'svg') {
-      logoNote = 'svg';
-    }
-  }
-  if (logoNote) {
-    pushTop(para(
-      [new TextRun({
-        text: logoNote === 'svg'
-          ? '[Logo omitted — SVG logos aren\u2019t supported in Word export; use PNG/JPG]'
-          : '[Logo could not be embedded]',
-        font: DOCX_FONT, italics: true, size: px2hpt(11), color: '999999'
-      })],
-      { spacing: { before: 200 } }
-    ), 450);
-  }
-
-  pushTop(hr(), 300);
-
-  // ── Info table (label : value), centered, borderless ──
-  function infoTable(rows) {
-    return new Table({
-      alignment: CENTER,
-      width: { size: 58, type: WidthType.PERCENTAGE },
-      borders: { ...DOCX_NO_BORDERS, insideHorizontal: { style: 'none' }, insideVertical: { style: 'none' } },
-      rows: rows.map(([label, val, fallback]) => new TableRow({
-        children: [
-          new TableCell({
-            width: { size: 42, type: WidthType.PERCENTAGE },
-            margins: { top: 30, bottom: 30, left: 0, right: 100 },
-            borders: DOCX_NO_BORDERS,
-            children: [new Paragraph({ children: [new TextRun({ text: label, bold: true, font: DOCX_FONT, size: px2hpt(16.67) })] })]
-          }),
-          new TableCell({
-            width: { size: 58, type: WidthType.PERCENTAGE },
-            margins: { top: 30, bottom: 30, left: 0, right: 0 },
-            borders: DOCX_NO_BORDERS,
-            children: [new Paragraph({ children: [(() => {
-              const hasVal = val && String(val).trim();
-              return new TextRun({
-                text: ': ' + (hasVal ? String(val) : (fallback || '—')),
-                font: DOCX_FONT, italics: !hasVal,
-                color: hasVal ? '000000' : '999999',
-                size: px2hpt(16.67)
-              });
-            })()] })]
-          })
-        ]
-      }))
-    });
-  }
-
-  // ── Section header ──
-  function sectionHeader(text) {
-    return para([new TextRun({ text, bold: true, font: DOCX_FONT, size: px2hpt(17.33) })], { spacing: { before: 260, after: 140 } });
-  }
-
-  const teachers = (state.teachers || []).filter(t => t.name && t.name.trim());
-
-  const t = state.template;
-  let bottomChildren = [];
-  let bottomHeight = 0;
-  function pushBottom(node, h) { bottomChildren.push(node); bottomHeight += h; }
-
-  if (t === 'assignment') {
-    pushTop(para([run(state.courseCode, 'Course Code & Name', { bold: true, size: px2hpt(18.67) })], { spacing: { before: 220 } }), 580);
-    pushTop(para([run(state.documentType, 'Document Type', { bold: true, size: px2hpt(17.33) })], { spacing: { before: 140 } }), 480);
-    pushTop(para([run(state.documentTitle, 'Document Title', { bold: true, size: px2hpt(25.33) })], { spacing: { before: 200 } }), 680);
-    pushTop(hr(), 300);
-    pushTop(sectionHeader('Submitted By'), 780);
-    pushTop(infoTable([
-      ['Name', state.name, '—'],
-      ['Registration No.', state.regNo, '—'],
-      ['Class Roll', state.classRoll, '—'],
-      ['Date', state.date ? fmtDate(state.date) : '', '—']
-    ]), 4 * 420);
-  } else if (t === 'labReport') {
-    pushTop(para([run(state.courseCode, 'Course Code & Name', { bold: true, size: px2hpt(18.67) })], { spacing: { before: 220 } }), 580);
-    pushTop(para([run(state.documentType, 'Lab Report', { bold: true, size: px2hpt(17.33) })], { spacing: { before: 140 } }), 480);
-    pushTop(para([run(state.experimentName, 'Experiment Name', { bold: true, size: px2hpt(25.33) })], { spacing: { before: 200 } }), 680);
-    pushTop(hr(), 300);
-    pushTop(sectionHeader('Submitted By'), 780);
-    pushTop(infoTable([
-      ['Name', state.name, '—'],
-      ['Registration No.', state.regNo, '—'],
-      ['Class Roll', state.classRoll, '—'],
-      ['Experiment No.', state.experimentNo, '—'],
-      ['Date of Performance', state.dateOfPerformance ? fmtDate(state.dateOfPerformance) : '', '—'],
-      ['Date of Submission', state.dateOfSubmission ? fmtDate(state.dateOfSubmission) : '', '—']
-    ]), 6 * 420);
-  } else if (t === 'project') {
-    pushTop(para([run(state.courseCode, 'Course Code & Name', { bold: true, size: px2hpt(18.67) })], { spacing: { before: 220 } }), 580);
-    pushTop(para([run(state.documentType, 'Project Report', { bold: true, size: px2hpt(17.33) })], { spacing: { before: 140 } }), 480);
-    pushTop(para([run(state.documentTitle, 'Project Title', { bold: true, size: px2hpt(25.33) })], { spacing: { before: 200 } }), 680);
-    if (state.groupName) {
-      pushTop(para([new TextRun({ text: state.groupName, font: DOCX_FONT, size: px2hpt(17.33) })], { spacing: { before: 60 } }), 400);
-    }
-    pushTop(hr(), 300);
-    pushTop(sectionHeader('Submitted By'), 780);
-
-    const students = state.students || [];
-    const headerCells = ['#', 'Name', 'Reg. No.', 'Class Roll'].map(h => new TableCell({
-      width: { size: h === '#' ? 10 : 30, type: WidthType.PERCENTAGE },
-      margins: { top: 60, bottom: 60, left: 80, right: 80 },
-      borders: { ...DOCX_NO_BORDERS, bottom: { style: BorderStyle.SINGLE, size: 4, color: '333333' } },
-      children: [new Paragraph({ alignment: CENTER, children: [new TextRun({ text: h, bold: true, font: DOCX_FONT, size: px2hpt(12) })] })]
-    }));
-    const headerRow = new TableRow({ tableHeader: true, children: headerCells });
-    function dataCell(text) {
-      return new TableCell({
-        margins: { top: 50, bottom: 50, left: 80, right: 80 },
-        borders: DOCX_NO_BORDERS,
-        children: [new Paragraph({ alignment: CENTER, children: [new TextRun({ text: text || '—', font: DOCX_FONT, size: px2hpt(13) })] })]
-      });
-    }
-    const dataRows = students.map((s, i) => new TableRow({
-      children: [dataCell(String(i + 1)), dataCell(s.name), dataCell(s.regNo), dataCell(s.classRoll)]
-    }));
-    pushTop(new Table({
-      alignment: CENTER,
-      width: { size: 90, type: WidthType.PERCENTAGE },
-      borders: { ...DOCX_NO_BORDERS, insideHorizontal: { style: 'none' }, insideVertical: { style: 'none' } },
-      rows: [headerRow, ...dataRows]
-    }), 380 * (1 + Math.max(1, students.length)));
-  }
-
-  // ── "Submitted To" block, with height tallied for the dynamic bottom-row sizing ──
-  if (teachers.length > 0) {
-    pushBottom(sectionHeader('Submitted To'), 780);
-    teachers.forEach((tch, i) => {
-      if (i > 0) {
-        pushBottom(new Paragraph({
-          alignment: CENTER,
-          spacing: { before: 140, after: 0 },
-          border: { bottom: { style: BorderStyle.SINGLE, size: 3, color: 'CCCCCC' } },
-          children: [new TextRun({ text: '', font: DOCX_FONT })]
-        }), 220);
-      }
-      const displayName = [tch.name, tch.shortName ? `[${tch.shortName}]` : ''].filter(Boolean).join(' ');
-      pushBottom(para([new TextRun({ text: displayName, bold: true, font: DOCX_FONT, size: px2hpt(17.33) })], { spacing: { before: 140 } }), 480);
-      if (tch.designation) pushBottom(para([new TextRun({ text: tch.designation, font: DOCX_FONT, size: px2hpt(16.67) })], { spacing: { before: 40 } }), 400);
-      if (tch.department) pushBottom(para([new TextRun({ text: tch.department, font: DOCX_FONT, size: px2hpt(16.67) })], { spacing: { before: 20 } }), 380);
-    });
-  } else {
-    pushBottom(sectionHeader('Submitted To'), 780);
-    pushBottom(para([new TextRun({ text: 'Teacher Name', font: DOCX_FONT, italics: true, color: '999999', size: px2hpt(17.33) })]), 400);
-  }
-
-  // ── Wrap everything in a bordered "page" frame, mirroring the a4-page
-  //    double border in the live preview. The frame is built as a TWO-ROW
-  //    table sharing one continuous border (no line drawn between the rows)
-  //    so it spans the FULL page height — exactly like the live preview,
-  //    where "Submitted To" is pushed to the bottom via a flex spacer while
-  //    the border still wraps the entire A4 sheet, not just the content. ──
-  const FRAME_BORDER = { style: BorderStyle.DOUBLE, size: 6, color: '000000' };
-
-  const topRow = new TableRow({
-    children: [new TableCell({
-      width: { size: 100, type: WidthType.PERCENTAGE },
-      margins: { top: 420, bottom: 100, left: 420, right: 420 },
-      borders: { top: FRAME_BORDER, left: FRAME_BORDER, right: FRAME_BORDER, bottom: { style: BorderStyle.NONE } },
-      children
-    })]
-  });
-
-  // A4 usable height (page height minus page margins minus the frame's own
-  // top/bottom cell margins) minus what the top block actually needs, gives
-  // the minimum height for the bottom block so the frame always fills exactly
-  // one page — never less (gap looks wrong) and never more (overflows to p.2).
-  const PAGE_USABLE_HEIGHT = 16838 - 850 - 850 - 520 - 520; // = 14098 twips
-  const bottomRowHeight = Math.max(bottomHeight + 200, PAGE_USABLE_HEIGHT - topHeight);
-
-  const bottomRow = new TableRow({
-    height: { value: bottomRowHeight, rule: HeightRule.ATLEAST },
-    children: [new TableCell({
-      width: { size: 100, type: WidthType.PERCENTAGE },
-      verticalAlign: VerticalAlign.BOTTOM,
-      margins: { top: 100, bottom: 420, left: 420, right: 420 },
-      borders: { bottom: FRAME_BORDER, left: FRAME_BORDER, right: FRAME_BORDER, top: { style: BorderStyle.NONE } },
-      children: bottomChildren
-    })]
-  });
-
-  const outerTable = new Table({
-    width: { size: 100, type: WidthType.PERCENTAGE },
-    borders: { ...DOCX_NO_BORDERS, insideHorizontal: { style: 'none' }, insideVertical: { style: 'none' } },
-    rows: [topRow, bottomRow]
-  });
-
-  return new Document({
-    sections: [{
-      properties: {
-        page: {
-          size: { width: 11906, height: 16838 }, // A4 in twips
-          margin: { top: 850, bottom: 850, left: 850, right: 850 }
-        }
-      },
-      children: [outerTable, new Paragraph({ text: '' })]
-    }]
-  });
-}
-
 async function exportDOCX() {
-  if (!validate()) { showToast('Please fill in all required fields.', 'error'); return; }
-
-  if (typeof docx === 'undefined' || typeof saveAs === 'undefined') {
-    showToast('DOCX library failed to load. Check your connection.', 'error');
+  if (typeof docx === 'undefined') {
+    showToast('DOCX library failed to load. Check your connection and retry.', 'error');
     return;
   }
-
+  validate(); // soft highlight only — does not block export
   showToast('Generating DOCX…');
 
   try {
-    const doc = buildDocxDocument();
+    const order = (state.blockOrder && state.blockOrder.length) ? state.blockOrder : DEFAULT_BLOCK_ORDER;
+    let children = [];
+    for (const id of order) {
+      if (state.blockVisibility[id] === false || !DOCX_BLOCK_BUILDERS[id]) continue;
+      const built = await DOCX_BLOCK_BUILDERS[id](); // await handles both sync & async builders
+      children = children.concat(built);
+    }
+
+    const s = state.style || DEFAULT_STYLE;
+    const doc = new docx.Document({
+      sections: [{
+        properties: { page: { margin: { top: 850, bottom: 850, left: 850, right: 850 } } },
+        children
+      }],
+      styles: {
+        default: {
+          document: { run: { font: (s.font.split(',')[0] || 'Times New Roman').replace(/['"]/g, '').trim() } }
+        }
+      }
+    });
+
     const blob = await docx.Packer.toBlob(doc);
-    saveAs(blob, `cover-page-${Date.now()}.docx`);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cover-page-${Date.now()}.docx`;
+    a.click();
+    URL.revokeObjectURL(url);
     showToast('DOCX exported successfully!', 'success');
   } catch (e) {
     console.error('DOCX export error:', e);
@@ -1967,6 +2430,14 @@ function fitZoom() {
 document.getElementById('btn-clear-data').addEventListener('click', () => {
   if (!confirm('Reset all fields to defaults? This cannot be undone.')) return;
   localStorage.removeItem(STORAGE_KEY);
+  // De-register any custom-field blocks from the runtime registries —
+  // they aren't part of DEFAULT_BLOCK_ORDER, so anything else left behind
+  // would silently linger in BLOCK_DEFS/BLOCK_RENDERERS/DOCX_BLOCK_BUILDERS.
+  Object.keys(BLOCK_DEFS).forEach(id => {
+    if (!DEFAULT_BLOCK_ORDER.includes(id)) {
+      delete BLOCK_DEFS[id]; delete BLOCK_RENDERERS[id]; delete DOCX_BLOCK_BUILDERS[id];
+    }
+  });
   state = {
     template: 'assignment',
     universityName: '', facultyName: '', departmentName: '',
@@ -1976,12 +2447,18 @@ document.getElementById('btn-clear-data').addEventListener('click', () => {
     groupName: '',
     name: '', regNo: '', classRoll: '', date: '',
     teachers: [{ name: '', shortName: '', designation: '', department: '' }],
-    students: [{ name: '', regNo: '', classRoll: '' }]
+    students: [{ name: '', regNo: '', classRoll: '' }],
+    customFields: [],
+    customPlaceholders: {},
+    blockOrder: [...DEFAULT_BLOCK_ORDER],
+    blockVisibility: { header: true, titleBlock: true, submittedBy: true, submittedTo: true },
+    style: { ...DEFAULT_STYLE }
   };
   clearLogo();
   document.querySelectorAll('.template-tab').forEach(b => b.classList.remove('active'));
   document.querySelector('[data-tpl="assignment"]').classList.add('active');
-  syncFormToState(); switchTemplate(); renderPreview(); updateStorageBar();
+  syncFormToState(); switchTemplate(); renderLayoutPanel(); renderPlaceholderPanel(); renderCustomFieldsPanel();
+  syncStyleFormToState(); applyPlaceholders(); renderPreview(); updateStorageBar();
   showToast('All data cleared.', 'success');
 });
 
@@ -2024,9 +2501,17 @@ mobileBtn.addEventListener('click', () => {
    INIT
 ══════════════════════════════════════════════ */
 loadState();
+registerCustomFieldBlocks();
+healBlockOrder();
 syncFormToState();
 initBindings();
 switchTemplate();
+renderLayoutPanel();
+renderPlaceholderPanel();
+renderCustomFieldsPanel();
+syncStyleFormToState();
+initStyleBindings();
+applyPlaceholders();
 renderPreview();
 updateStorageBar();
 
