@@ -1,0 +1,53 @@
+{
+  "name": "Academic Cover Page Generator",
+  "short_name": "CoverGen",
+  "description": "Create beautiful, print-ready academic cover pages for assignments, lab reports, and project reports. Works completely offline.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#5b3fd4",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "productivity", "utilities"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235b3fd4'/%3E%3Cstop offset='1' stop-color='%237b5fe4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='96' fill='url(%23g)'/%3E%3Crect x='96' y='112' width='320' height='288' rx='24' fill='%23ffffff' fill-opacity='0.15'/%3E%3Crect x='96' y='112' width='320' height='288' rx='24' fill='none' stroke='%23ffffff' stroke-width='12' stroke-opacity='0.55'/%3E%3Ctext x='256' y='345' font-family='Georgia,serif' font-size='220' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235b3fd4'/%3E%3Cstop offset='1' stop-color='%237b5fe4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='96' fill='url(%23g)'/%3E%3Crect x='96' y='112' width='320' height='288' rx='24' fill='%23ffffff' fill-opacity='0.15'/%3E%3Crect x='96' y='112' width='320' height='288' rx='24' fill='none' stroke='%23ffffff' stroke-width='12' stroke-opacity='0.55'/%3E%3Ctext x='256' y='345' font-family='Georgia,serif' font-size='220' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235b3fd4'/%3E%3Cstop offset='1' stop-color='%237b5fe4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' fill='url(%23g)'/%3E%3Ctext x='256' y='345' font-family='Georgia,serif' font-size='200' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Lab Report",
+      "short_name": "Lab Report",
+      "description": "Start a new lab report cover page",
+      "url": "./index.html?template=labReport"
+    },
+    {
+      "name": "New Project Report",
+      "short_name": "Project",
+      "description": "Start a new project report cover page",
+      "url": "./index.html?template=project"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
+}
